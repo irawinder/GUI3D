@@ -1,3 +1,8 @@
+/*  Camera3D_Basic, Ira Winder, 2018
+ *
+ *  This script demonstrates the implementation of a "Camera" class that has ready-made UI and smooth camera transitions.
+ */
+ 
 class Camera {
   
   // Camera Geometry:
