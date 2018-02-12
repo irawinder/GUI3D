@@ -1,3 +1,8 @@
+/*  Camera3D_Basic, Ira Winder, 2018
+ *
+ *  This script demonstrates the implementation of a "Camera" class that has ready-made UI and smooth camera transitions.
+ */
+ 
 Camera cam;
 PVector b = new PVector(1000, 1000, 250); //Bounding Box for Environment
 
