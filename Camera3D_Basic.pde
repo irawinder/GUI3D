@@ -24,7 +24,8 @@ void draw() {
   
   // Draw Box
   translate(b.x/2, b.y/2, b.z/2);
-  fill(255, 50);
+  noFill();
+  stroke(255, 50);
   box(b.x, b.y, b.z);
   
   cam.drawControls();
