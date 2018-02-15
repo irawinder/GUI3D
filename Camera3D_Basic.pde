@@ -28,6 +28,7 @@ void draw() {
   stroke(255, 50);
   box(b.x, b.y, b.z);
   
+  // Draw Slider Bars for Controlling Zoom and Rotation
   cam.drawControls();
 }
 
