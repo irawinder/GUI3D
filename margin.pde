@@ -75,10 +75,25 @@ class Toolbar {
   }
   
   void draw() {
-    fill(255, 50);
-    noStroke();
+    camera();
+    noLights();
+    perspective();
+    hint(DISABLE_DEPTH_TEST);
+    
     pushMatrix();
     translate(GAP, GAP);
+    
+    // Shadow
+    pushMatrix();
+    translate(3, 3);
+    noStroke();
+    fill(0, 100);
+    rect(0, 0, barWidth, height - 2*GAP, GAP);
+    popMatrix();
+    
+    // Canvas
+    fill(255, 50);
+    noStroke();
     rect(0, 0, barWidth, height - 2*GAP, GAP);
     translate(S_U_OFFSET, S_U_OFFSET);
     textAlign(LEFT, TOP);
@@ -94,6 +109,8 @@ class Toolbar {
     
     s3.listen();
     s3.drawMe();
+    
+    hint(ENABLE_DEPTH_TEST);
   }
   
   boolean hover() {
@@ -162,14 +179,14 @@ class controlSlider {
     textAlign(LEFT, BOTTOM);
     text(name,xpos,ypos-0.75*diameter);
     textAlign(CENTER, CENTER);
-    text(int(value),xpos+diameter+len+5,ypos);
+    text(int(value),xpos+0.75*diameter+len,ypos);
     
-    stroke(100);
     fill(255,100);
-    rect(xpos,ypos-0.5*diameter,len+0.5*diameter,diameter,diameter);
+    stroke(100);
+    rect(xpos,ypos-0.5*diameter,len,diameter,diameter);
     
     stroke(150);
     fill(150);
-    ellipse(xpos+0.5*diameter+(len-0.5*diameter)*(value-valMin)/(valMax-valMin),ypos,diameter,diameter);
+    ellipse(xpos+0.5*diameter+(len-1.0*diameter)*(value-valMin)/(valMax-valMin),ypos,diameter,diameter);
   }
 }
