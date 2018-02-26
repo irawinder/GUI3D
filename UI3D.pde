@@ -59,6 +59,7 @@ void mouseMoved() {
 
 void keyPressed() {
   cam.moved();
+  bar.pressed();
   
   switch(key) {
     case 'r':
