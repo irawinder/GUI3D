@@ -45,7 +45,7 @@ class Camera {
   int fadeTimer = 300;
   float uiFade = 1.0;  // 0.0 - 1.0
   
-  Camera(PVector boundary) {
+  Camera(int toolbarWidth, PVector boundary) {
     this.boundary = boundary;
     
     // Initialize the Camera
@@ -66,7 +66,7 @@ class Camera {
     vs = new VScrollbar(width - int(1.5*MARGIN*height), int(MARGIN*height), int(MARGIN*height), int(0.3*height), 5);
     
     // Initialize Drag Funciton
-    drag = new XYDrag(1.0, 7, 5, 5, width - 10, int(0.85*height) - 5);
+    drag = new XYDrag(1.0, 7, int(MARGIN*height) + toolbarWidth, int(MARGIN*height), width - 2*int(MARGIN*height) + toolbarWidth, int(0.85*height) - 5);
     
     reset();
   }

@@ -4,12 +4,21 @@
  */
  
 Camera cam;
-PVector b = new PVector(1000, 1000, 250); //Bounding Box for Environment
+PVector b = new PVector(1000, 1000, 250); //Bounding Box for 3D Environment
+
+Toolbar bar;
+int toolbar_width = 250;
 
 // Initiatizes program on startup
 void setup() {
   size(1280, 800, P3D);
-  cam = new Camera(b);
+  //fullScreen(P3D);
+  cam = new Camera (toolbar_width, b);
+  bar = new Toolbar(toolbar_width, int(cam.MARGIN*height));
+  
+  bar.title = "UI3D Visualization Template";
+  bar.credit = "Ira Winder, 2018";
+  bar.explanation = "Use these scripts as the framework for an explorable 3D model parameterized with sliders and radio buttons.";
 }
 
 void draw() {
@@ -30,10 +39,18 @@ void draw() {
   
   // Draw Slider Bars for Controlling Zoom and Rotation
   cam.drawControls();
+  
+  // Draw Margin Toolbar
+  bar.draw();
 }
 
 void mousePressed() {
   cam.pressed();
+  bar.pressed();
+}
+
+void mouseReleased() {
+  bar.released();
 }
 
 void mouseMoved() {
@@ -46,6 +63,7 @@ void keyPressed() {
   switch(key) {
     case 'r':
       cam.reset();
+      bar.restoreDefault();
       break;
   }
 }
