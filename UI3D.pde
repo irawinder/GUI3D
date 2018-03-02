@@ -60,7 +60,7 @@ void draw() {
   noFill();
   stroke(#FFFF00, 200);
   ellipse(s_x, s_y, 50, 50);
-  fill(255);
+  fill(#FFFF00, 200);
   textAlign(LEFT, CENTER);
   text("OBJECT: Move with Arrow Keys", s_x + 30, s_y);
   
