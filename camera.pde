@@ -25,6 +25,10 @@ class Camera {
   //
   XYDrag drag;
   
+  // UI: Chunks used for selecting area in 3D
+  //
+  ChunkGrid cField;
+  
   // UI: Active UI Input
   // Input -1 = none
   // Input  0 = drag
@@ -39,11 +43,16 @@ class Camera {
   int LINE_COLOR = 255;  // (0-255) Default color for lines, text, etc
   int BASE_ALPHA = 50;   // (0-255) Default baseline alpha value
   
-  // UI: transparency fades over time
+  // UI: Transparency fades over time
   //
   int FADE_TIMER = 300;
   int fadeTimer = 300;
   float uiFade = 1.0;  // 0.0 - 1.0
+  
+  // UI: Chunks used for selecting area in 3D
+  //
+  int CHUNK_RESOLUTION = 30; // number of horizontal chunk units
+  int TOLERANCE = 15; // number of pixels within range to select
   
   Camera(int toolbarWidth, PVector boundary) {
     this.boundary = boundary;
@@ -57,16 +66,21 @@ class Camera {
     Y_DEFAULT = - 0.12 * boundary.y;
     zoom = 0.1;
     offset = new PVector(X_DEFAULT, Y_DEFAULT);
-  
+    int marginPix = int(MARGIN*height);
+    int thirdPix  = int(0.3*height);
+    
     // Initialize Horizontal Scrollbar
-    hs = new HScrollbar(width - int(height*MARGIN) - int(0.3*height), int((1-1.5*MARGIN)*height), int(0.3*height), int(MARGIN*height), 5);
+    hs = new HScrollbar(width - marginPix - thirdPix, int(1 - 1.5*marginPix), thirdPix, marginPix, 5);
     rotation = hs.getPosPI(); // (0 - 2*PI)
     
     // Initialize Vertical Scrollbar
-    vs = new VScrollbar(width - int(1.5*MARGIN*height), int(MARGIN*height), int(MARGIN*height), int(0.3*height), 5);
+    vs = new VScrollbar(width - int(1.5*marginPix), marginPix, marginPix, thirdPix, 5);
     
     // Initialize Drag Funciton
-    drag = new XYDrag(1.0, 7, int(MARGIN*height) + toolbarWidth, int(MARGIN*height), width - 2*int(MARGIN*height) + toolbarWidth, int(0.85*height) - 5);
+    drag = new XYDrag(1.0, 7, marginPix + toolbarWidth, marginPix, width - 2*marginPix + toolbarWidth, height - 2*marginPix);
+    
+    // Initialize Selection Chunks
+    cField = new ChunkGrid(CHUNK_RESOLUTION, TOLERANCE, marginPix + toolbarWidth, marginPix, width - 2*marginPix + toolbarWidth, height - 2*marginPix);
     
     reset();
   }
@@ -104,7 +118,7 @@ class Camera {
     // Translate Reference Frame
     translate(offset.x, offset.y, 0);
     
-    cam.update();
+    update();
   }
   
   // resets and centers camera view
@@ -122,6 +136,8 @@ class Camera {
   void moved() {
     uiFade = 1.0;
     fadeTimer = FADE_TIMER;
+    orient();
+    cField.checkChunks(mouseX, mouseY);
   }
   
   void pressed() {
@@ -410,7 +426,7 @@ class Camera {
         }
       }
     }
-    // Update All Scroll and Drag Inputs
+    // Update All Scroll, Drag, and Chunk Inputs
     if (!mousePressed) {
       if (drag.updating()) {
         drag.update();
@@ -437,6 +453,118 @@ class Camera {
     } else if (activeInput == 2) {
       vs.update();
       zoom = vs.getPosZoom();
+    }
+  }
+  
+  // Object that defines an area that is sensitive to user-based mouse selection
+  //
+  class Chunk {
+    PVector location; // location of chunk
+    float size; // cube size of chunk
+    float s_x, s_y; // screen location of chunk
+    boolean hover;
+    
+    Chunk(PVector location, float size) {
+      this.location = location;
+      this.size = size;
+      hover = false;
+    }
+    
+    void setScreen() {
+      s_x = screenX(location.x, location.y, location.z);
+      s_y = screenY(location.x, location.y, location.z);
+    }
+    
+    void draw() {
+      noFill();
+      if (hover) {
+        stroke(#FFFF00, 255);
+        strokeWeight(2);
+        pushMatrix();
+        translate(location.x, location.y, location.z + size/2);
+        box(size, size, size);
+        popMatrix();
+      } else {
+        stroke(100, 100);
+        strokeWeight(1);
+        rect(location.x-size/2, location.y-size/2, size, size);
+      }
+      
+    }
+  }
+  
+  // Grid of Chunks
+  //
+  class ChunkGrid {
+    int resolution, tolerance;
+    ArrayList<Chunk> selectionGrid;
+    Chunk closest;
+    boolean closestFound;
+    
+    // Extent of Clickability
+    int extentX;
+    int extentY;
+    int extentW;
+    int extentH;
+    
+    ChunkGrid(int resolution, int tolerance, int eX, int eY, int eW, int eH) {
+      this.resolution = resolution;
+      this.tolerance = tolerance;
+      
+      Chunk chunk; PVector chunkLocation;
+      selectionGrid = new ArrayList<Chunk>();
+      float chunkU  = boundary.x / resolution;
+      float chunkV  = boundary.y / resolution;
+      for(int u=0; u<chunkU; u++) {
+        for(int v=0; v<chunkV; v++) {
+          chunkLocation = new PVector(u*resolution, v*resolution);
+          chunk = new Chunk(chunkLocation, resolution);
+          selectionGrid.add(chunk);
+        }
+      }
+      closestFound = false;
+      
+      extentX = eX;
+      extentY = eY;
+      extentW = eW;
+      extentH = eH;
+    }
+    
+    // Returns the location of chunk closest to user's mouse position
+    //
+    void checkChunks(int mouseX, int mouseY) {
+      closestFound = false;
+      
+      // Updates Screenlocation for all chunks
+      for (Chunk chunk: selectionGrid) chunk.setScreen();
+      
+      // Discovers closest chunk to mouse
+      PVector mouse = new PVector(mouseX, mouseY);
+      Chunk c; PVector c_location; int c_index = -1;
+      float dist = Float.POSITIVE_INFINITY;
+      for (int i=0; i<selectionGrid.size(); i++) {
+        c = selectionGrid.get(i);
+        c.hover = false;
+        c_location = new PVector(c.s_x, c.s_y);
+        if (mouse.dist(c_location) < dist && mouse.dist(c_location) < TOLERANCE) {
+          dist = mouse.dist(c_location);
+          c_index = i;
+        }
+      }
+      
+      // Retrieve and store closest chunk found
+      if (mouseX > extentX && mouseX < extentX+extentW && mouseY > extentY && mouseY < extentY+extentH) {
+        
+        if (c_index >= 0) {
+          closestFound = true;
+          closest = selectionGrid.get(c_index);
+          closest.hover = true;
+        }
+      }
+    }
+    
+    void draw() {
+      for (Chunk c: selectionGrid) c.draw();
     }
   }
   

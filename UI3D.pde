@@ -1,6 +1,6 @@
 /*  Camera3D_Basic, Ira Winder, 2018
  *
- *  This script demonstrates the implementation of a "Camera" class that has ready-made UI and smooth camera transitions.
+ *  This script demonstrates the implementation of a "Camera" class that has ready-made UI, Sliders, Radio Buttons, I/O, and smooth camera transitions.
  */
  
 Camera cam;
@@ -10,6 +10,7 @@ Toolbar bar;
 int toolbar_width = 250;
 
 PVector objectLocation;
+ArrayList<PVector> additions;
 
 // Initiatizes program on startup
 void setup() {
@@ -20,9 +21,11 @@ void setup() {
   
   bar.title = "UI3D Visualization Template";
   bar.credit = "Ira Winder, 2018";
-  bar.explanation = "Use these scripts as the framework for an explorable 3D model parameterized with sliders and radio buttons.";
+  bar.explanation = "Use these scripts as the framework for an explorable 3D model parameterized with sliders, radio buttons, and 3d Object Placement.";
   
+  // Sample 3D objects to manipulate
   objectLocation = new PVector(b.x/2, b.y/2, 0);
+  additions = new ArrayList<PVector>();
 }
 
 void draw() {
@@ -41,6 +44,20 @@ void draw() {
   // Draw Rectangle
   fill(244, 200);
   rect(0, 0, b.x, b.y);
+  
+  // Draw Selection Field and Cursor
+  cam.cField.draw();
+  
+  // Draw mouse-based additions
+  if (additions.size() > 0) {
+    for (PVector v: additions) {
+      pushMatrix();
+      translate(v.x, v.y, v.z + 15);
+      fill(#00FF00);
+      box(7, 7, 7);
+      popMatrix();
+    }
+  }
   
   // Draw Box
   pushMatrix();
@@ -73,6 +90,12 @@ void mousePressed() {
   bar.pressed();
 }
 
+void mouseClicked() {
+  if (cam.cField.closestFound) {
+    additions.add(cam.cField.closest.location);
+  }
+}
+
 void mouseReleased() {
   bar.released();
 }
@@ -89,6 +112,7 @@ void keyPressed() {
     case 'r':
       cam.reset();
       bar.restoreDefault();
+      additions.clear();
       break;
     case '-':
       objectLocation.z -= 20;
