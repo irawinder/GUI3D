@@ -56,7 +56,7 @@ class Camera {
   
   // UI: Show Frame Rate
   //
-  boolean showFrameRate = false;
+  boolean showFrameRate;
   
   Camera(int toolbarWidth, PVector boundary) {
     this.boundary = boundary;
@@ -85,6 +85,7 @@ class Camera {
     // Initialize Selection Chunks
     cField = new ChunkGrid(CHUNK_RESOLUTION, TOLERANCE, MARGIN + toolbarWidth, MARGIN, width - 2*MARGIN + toolbarWidth, height - 2*MARGIN);
     
+    showFrameRate = false;
     reset();
   }
   
