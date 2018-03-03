@@ -17,7 +17,7 @@ void setup() {
   size(1280, 800, P3D);
   //fullScreen(P3D);
   cam = new Camera (toolbar_width, b);
-  bar = new Toolbar(toolbar_width, int(cam.MARGIN*height));
+  bar = new Toolbar(toolbar_width, cam.MARGIN);
   
   bar.title = "UI3D Visualization Template";
   bar.credit = "Ira Winder, 2018";

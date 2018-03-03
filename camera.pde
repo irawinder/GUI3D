@@ -39,7 +39,7 @@ class Camera {
   
   // UI: Superficial Parameters for drawing slider bars and text
   //
-  float MARGIN = 0.03;   // Fraction of screen height to use as margin
+  int MARGIN   = 25;   // Pixels to use as buffer margin
   int LINE_COLOR = 255;  // (0-255) Default color for lines, text, etc
   int BASE_ALPHA = 50;   // (0-255) Default baseline alpha value
   
@@ -70,21 +70,20 @@ class Camera {
     Y_DEFAULT = - 0.12 * boundary.y;
     zoom = 0.1;
     offset = new PVector(X_DEFAULT, Y_DEFAULT);
-    int marginPix = int(MARGIN*height);
     int thirdPix  = int(0.3*height);
     
     // Initialize Horizontal Scrollbar
-    hs = new HScrollbar(width - marginPix - thirdPix, int(1 - 1.5*marginPix), thirdPix, marginPix, 5);
+    hs = new HScrollbar(width - MARGIN - thirdPix, height - 1.5*MARGIN, thirdPix, MARGIN, 5);
     rotation = hs.getPosPI(); // (0 - 2*PI)
     
     // Initialize Vertical Scrollbar
-    vs = new VScrollbar(width - int(1.5*marginPix), marginPix, marginPix, thirdPix, 5);
+    vs = new VScrollbar(width - int(1.5*MARGIN), MARGIN, MARGIN, thirdPix, 5);
     
     // Initialize Drag Funciton
-    drag = new XYDrag(1.0, 7, marginPix + toolbarWidth, marginPix, width - 2*marginPix + toolbarWidth, height - 2*marginPix);
+    drag = new XYDrag(1.0, 7, MARGIN + toolbarWidth, MARGIN, width - 2*MARGIN + toolbarWidth, height - 2*MARGIN);
     
     // Initialize Selection Chunks
-    cField = new ChunkGrid(CHUNK_RESOLUTION, TOLERANCE, marginPix + toolbarWidth, marginPix, width - 2*marginPix + toolbarWidth, height - 2*marginPix);
+    cField = new ChunkGrid(CHUNK_RESOLUTION, TOLERANCE, MARGIN + toolbarWidth, MARGIN, width - 2*MARGIN + toolbarWidth, height - 2*MARGIN);
     
     reset();
   }
@@ -159,7 +158,7 @@ class Camera {
   }
   
   class HScrollbar {
-    int swidth, sheight;    // width and height of bar
+    float swidth, sheight;  // width and height of bar
     float xpos, ypos;       // x and y position of bar
     float spos, newspos;    // x position of slider
     float sposMin, sposMax; // max and min values of slider
@@ -168,11 +167,11 @@ class Camera {
     boolean locked;
     float ratio;
   
-    HScrollbar (float xp, float yp, int sw, int sh, int l) {
+    HScrollbar (float xp, float yp, float sw, float sh, int l) {
       swidth = sw;
       sheight = sh;
-      int widthtoheight = sw - sh;
-      ratio = (float)sw / (float)widthtoheight;
+      float widthtoheight = sw - sh;
+      ratio = sw / widthtoheight;
       xpos = xp;
       ypos = yp-sheight/2;
       spos = xpos + swidth/2 - sheight/2;
@@ -197,7 +196,7 @@ class Camera {
       if (locked) {
         newspos = constrain(mouseX-sheight/2, sposMin, sposMax);
       }
-      if (abs(newspos - spos) > 0.05) {
+      if (abs(newspos - spos) > 0.001) {
         spos = spos + (newspos-spos)/loose;
       }
     }
@@ -244,7 +243,7 @@ class Camera {
   }
   
   class VScrollbar {
-    int swidth, sheight;    // width and height of bar
+    float swidth, sheight;    // width and height of bar
     float xpos, ypos;       // x and y position of bar
     float spos, newspos;    // y position of slider
     float sposMin, sposMax; // max and min values of slider
@@ -253,11 +252,11 @@ class Camera {
     boolean locked;
     float ratio;
   
-    VScrollbar (float xp, float yp, int sw, int sh, int l) {
+    VScrollbar (float xp, float yp, float sw, float sh, int l) {
       swidth = sw;
       sheight = sh;
-      int heighttowidth = sw - sh;
-      ratio = (float)sh / (float)heighttowidth;
+      float heighttowidth = sw - sh;
+      ratio = sh / heighttowidth;
       xpos = xp-swidth/2;
       ypos = yp;
       spos = sheight/2;
@@ -282,7 +281,7 @@ class Camera {
       if (locked) {
         newspos = constrain(mouseY-swidth/2, sposMin, sposMax);
       }
-      if (abs(newspos - spos) > 0.05) {
+      if (abs(newspos - spos) > 0.001) {
         spos = spos + (newspos-spos)/loose;
       }
     }
@@ -324,7 +323,7 @@ class Camera {
     float getPosZoom() {
       // Convert spos to be values between
       // 0 and 2PI
-      return MIN_ZOOM + (MAX_ZOOM - MIN_ZOOM) * spos / float(sheight);
+      return MIN_ZOOM + (MAX_ZOOM - MIN_ZOOM) * spos / sheight;
     }
   }
   
@@ -586,12 +585,12 @@ class Camera {
     
     // Draw Help Text
     pushMatrix();
-    translate(width/2, MARGIN*height);
+    translate(width/2, MARGIN);
     fill(LINE_COLOR, 255-BASE_ALPHA);
     textAlign(CENTER, TOP);
     text("Press 'r' to reset camera position", 0, 0);
     if (showFrameRate) text("(F)ramerate: " + int(frameRate*10)/10.0, 0, 16);
-    translate(0, height - 2*MARGIN*height);
+    translate(0, height - 2*MARGIN);
     textAlign(CENTER, BOTTOM);
     fill(LINE_COLOR, 2*BASE_ALPHA);
     text("Copyright 2018 Ira Winder", 0, 0);
