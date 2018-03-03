@@ -54,6 +54,10 @@ class Camera {
   int CHUNK_RESOLUTION = 30; // number of horizontal chunk units
   int TOLERANCE = 15; // number of pixels within range to select
   
+  // UI: Show Frame Rate
+  //
+  boolean showFrameRate = false;
+  
   Camera(int toolbarWidth, PVector boundary) {
     this.boundary = boundary;
     
@@ -586,6 +590,7 @@ class Camera {
     fill(LINE_COLOR, 255-BASE_ALPHA);
     textAlign(CENTER, TOP);
     text("Press 'r' to reset camera position", 0, 0);
+    if (showFrameRate) text("(F)ramerate: " + int(frameRate*10)/10.0, 0, 16);
     translate(0, height - 2*MARGIN*height);
     textAlign(CENTER, BOTTOM);
     fill(LINE_COLOR, 2*BASE_ALPHA);

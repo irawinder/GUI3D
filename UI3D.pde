@@ -109,6 +109,9 @@ void keyPressed() {
   bar.pressed();
   
   switch(key) {
+    case 'f':
+      cam.showFrameRate = !cam.showFrameRate;
+      break;
     case 'r':
       cam.reset();
       bar.restoreDefault();

@@ -1,11 +1,11 @@
-int s_vOffset = 300;
+int controlOffset = 250;
   
 class Toolbar {
   int barWidth;
-  int GAP;
-  int s_width;
-  int S_V_GAP = 70;
-  int S_U_OFFSET = 25;
+  int GAP;           // pixel distance from edge of screen
+  int u_width;       // pixel width of margin content
+  int V_OFFSET = 35; // standard vertical pixel distance between control elements
+  int U_OFFSET = 25; // standard horizontal pixel distance from edge of canvas
   
   String title, credit, explanation;
   
@@ -21,75 +21,92 @@ class Toolbar {
   Toolbar(int w, int g) {
     barWidth = w;
     GAP = g;
-    s_width = barWidth - 3*S_U_OFFSET;
-    
+    u_width = barWidth - 3*U_OFFSET;
     initControls();
   }
   
   void initControls() {
+    int num = 0;
+    
     s1 = new ControlSlider();
     s1.name = "Slider 1";
+    s1.unit = "%";
     s1.keyPlus = 'w';
     s1.keyMinus = 'q';
-    s1.xpos = GAP + S_U_OFFSET;
-    s1.ypos = s_vOffset + 0*S_V_GAP;
-    s1.len = s_width;
+    s1.xpos = GAP + U_OFFSET;
+    s1.ypos = controlOffset + num*V_OFFSET;
+    s1.len = u_width;
     s1.valMin = 0;
     s1.valMax = 100;
     s1.value = 50;
     
+    num++;
+    
     s2 = new ControlSlider();
     s2.name = "Slider 2";
+    s2.unit = "%";
     s2.keyPlus = 's';
     s2.keyMinus = 'a';
-    s2.xpos = GAP + S_U_OFFSET;
-    s2.ypos = s_vOffset + 1*S_V_GAP;
-    s2.len = s_width;
+    s2.xpos = GAP + U_OFFSET;
+    s2.ypos = controlOffset + num*V_OFFSET;
+    s2.len = u_width;
     s2.valMin = 0;
     s2.valMax = 100;
     s2.value = 50;
     
+    num++;
+    
     s3 = new ControlSlider();
     s3.name = "Slider 3";
+    s3.unit = "%";
     s3.keyPlus = 'x';
     s3.keyMinus = 'z';
-    s3.xpos = GAP + S_U_OFFSET;
-    s3.ypos = s_vOffset + 2*S_V_GAP;
-    s3.len = s_width;
+    s3.xpos = GAP + U_OFFSET;
+    s3.ypos = controlOffset + num*V_OFFSET;
+    s3.len = u_width;
     s3.valMin = 0;
     s3.valMax = 100;
     s3.value = 50;
     
+    num++;
+    
     s4 = new ControlSlider();
     s4.name = "Slider 3";
+    s4.unit = "%";
     s4.keyPlus = 'x';
     s4.keyMinus = 'z';
-    s4.xpos = GAP + S_U_OFFSET;
-    s4.ypos = s_vOffset + 3*S_V_GAP;
-    s4.len = s_width;
+    s4.xpos = GAP + U_OFFSET;
+    s4.ypos = controlOffset + num*V_OFFSET;
+    s4.len = u_width;
     s4.valMin = 0;
     s4.valMax = 100;
     s4.value = 50;
     
+    num+=2;
+    
     b1 = new RadioButton();
     b1.name = "Button 1";
     b1.keyToggle = '1';
-    b1.xpos = GAP + S_U_OFFSET;
-    b1.ypos = s_vOffset + 4*S_V_GAP;
+    b1.xpos = GAP + U_OFFSET;
+    b1.ypos = controlOffset + num*V_OFFSET;
     b1.value = false;
+    
+    num++;
     
     b2 = new RadioButton();
     b2.name = "Button 2";
     b2.keyToggle = '2';
-    b2.xpos = GAP + S_U_OFFSET;
-    b2.ypos = s_vOffset + int(4.5*S_V_GAP);
+    b2.xpos = GAP + U_OFFSET;
+    b2.ypos = controlOffset + num*V_OFFSET;
     b2.value = false;
+    
+    num++;
     
     b3 = new RadioButton();
     b3.name = "Button 3";
     b3.keyToggle = '3';
-    b3.xpos = GAP + S_U_OFFSET;
-    b3.ypos = s_vOffset + 5*S_V_GAP;
+    b3.xpos = GAP + U_OFFSET;
+    b3.ypos = controlOffset + num*V_OFFSET;
     b3.value = false;
   }
   
@@ -122,6 +139,8 @@ class Toolbar {
     b3.value = false;
   }
   
+  // Draw Margin Elements
+  //
   void draw() {
     camera();
     noLights();
@@ -143,10 +162,10 @@ class Toolbar {
     fill(255, 50);
     noStroke();
     rect(0, 0, barWidth, height - 2*GAP, GAP);
-    translate(S_U_OFFSET, S_U_OFFSET);
+    translate(U_OFFSET, U_OFFSET);
     textAlign(LEFT, TOP);
     fill(255);
-    text(title + "\n" + credit + "\n\n" + explanation, 0, 0, barWidth - 2*S_U_OFFSET, height - 2*GAP - 2*S_U_OFFSET);
+    text(title + "\n" + credit + "\n\n" + explanation, 0, 0, barWidth - 2*U_OFFSET, height - 2*GAP - 2*U_OFFSET);
     popMatrix();
     
     s1.update();
@@ -180,25 +199,23 @@ class Toolbar {
 
 class ControlSlider {
   String name;
+  String unit;
   int xpos;
   int ypos;
   int len;
   int diameter;
-  
   char keyMinus;
   char keyPlus;
   boolean isDragged;
-  
   int valMin;
   int valMax;
-  
   float value;
   
   ControlSlider() {
     xpos = 0;
     ypos = 0;
     len = 200;
-    diameter = 25;
+    diameter = 15;
     keyMinus = '-';
     keyPlus = '+';
     isDragged = false;
@@ -210,7 +227,7 @@ class ControlSlider {
   void update() {
     //Keyboard Controls
     if ((keyPressed == true) && (key == keyMinus)) {value--;}
-    if ((keyPressed == true) && (key == keyPlus)) {value++;}
+    if ((keyPressed == true) && (key == keyPlus))  {value++;}
     
     if (isDragged) {
       value = (mouseX-xpos)*(valMax-valMin)/len+valMin;
@@ -227,44 +244,45 @@ class ControlSlider {
   }
   
   void drawMe() {
-    fill(255);
-    
+
+    // Slider Info
     strokeWeight(1);
     fill(255);
     textAlign(LEFT, BOTTOM);
     text(name,xpos,ypos-0.75*diameter);
-    textAlign(CENTER, CENTER);
-    text(int(value),xpos+0.75*diameter+len,ypos);
+    textAlign(LEFT, CENTER);
+    text(int(value) + " " + unit,xpos+6+len,ypos-1);
     
-    fill(255,100);
-    stroke(100);
-    rect(xpos,ypos-0.5*diameter,len,diameter,diameter);
-    
+    // Slider Bar
+    fill(100);
     noStroke();
-    fill(200, 200);
+    rect(xpos,ypos-0.15*diameter,len,0.3*diameter,diameter);
+    
+    // Slider Circle
+    noStroke();
+    fill(200);
     ellipse(xpos+0.5*diameter+(len-1.0*diameter)*(value-valMin)/(valMax-valMin),ypos,diameter,diameter);
   }
 }
 
 class RadioButton {
   String name;
+  int col;
   int xpos;
   int ypos;
   int diameter;
-  
   char keyToggle;
-  
   int valMin;
   int valMax;
-  
   boolean value;
   
   RadioButton() {
     xpos = 0;
     ypos = 0;
-    diameter = 25;
+    diameter = 20;
     keyToggle = ' ';
     value = false;
+    col = #FFFFFF;
   }
   
   void listen() {
@@ -279,24 +297,23 @@ class RadioButton {
   }
   
   void drawMe() {
-    fill(255);
     
+    // Button Info
     strokeWeight(1);
     fill(255);
-    textAlign(CENTER, CENTER);
-    text(name,xpos + 2.5*diameter,ypos);
+    textAlign(LEFT, CENTER);
+    text(name,xpos + 1.5*diameter,ypos);
     
+    // Button Holder
     noFill();
     stroke(100);
     strokeWeight(3);
     ellipse(xpos+0.5*diameter,ypos,diameter,diameter);
     
+    // Button Circle
     noStroke();
-    if (value) {
-      fill(175);
-    } else {
-      fill(0);
-    }
+    if (value) { fill(col); } 
+    else       { fill( 0 ); } 
     ellipse(xpos+0.5*diameter,ypos,0.7*diameter,0.7*diameter);
   }
 }
