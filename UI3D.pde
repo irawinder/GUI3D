@@ -43,6 +43,9 @@ void setup() {
   bar_left.addButton("Button A", true, '1');
   bar_left.addButton("Button B", false,'2');
   bar_left.addButton("Button C", true, '3');
+  bar_left.addTriSlider("TriSlider", "value1", #FF00FF, "value2", #FFFF00, "value3", #00FFFF);
+  bar_left.addButton("Button Z", true, '4');
+  bar_left.addButton("Button Y", true, '5');
   
   // Right Toolbar
   bar_right = new Toolbar(width - (BAR_X + BAR_W), BAR_Y, BAR_W, BAR_H, MARGIN);
@@ -51,10 +54,10 @@ void setup() {
   bar_right.explanation = "Add outputs, summary data, or ore inputs here.";
   bar_right.controlY = BAR_Y + 150;
   bar_right.addSlider("Slider D", "kg", 50, 100, 72, '<', '>');
-  bar_right.addButton("Button D", true, '4');
-  bar_right.addButton("Button E", false,'5');
-  bar_right.addButton("Button F", true, '6');
-  bar_right.addButton("Button G", true, '7');
+  bar_right.addButton("Button D", true, '6');
+  bar_right.addButton("Button E", false,'7');
+  bar_right.addButton("Button F", true, '8');
+  bar_right.addButton("Button G", true, '9');
   
   // Initialize 3D World Camera Defaults
   cam = new Camera (B, MARGIN);

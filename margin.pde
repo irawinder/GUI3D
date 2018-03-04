@@ -1,4 +1,10 @@
-
+/*  Toolbar, Ira Winder, 2018
+ *
+ *  This class and associated sliders, radio buttons, and specialized input are generalizable for parameterized models
+ *
+ *  Toolbar() <-- ControlSlider(), RadioButton(), TriSlider()
+ *
+ */
   
 class Toolbar {
   int barX, barY, barW, barH; // X, Y, Width, and Height of Toolbar on Screen
@@ -10,6 +16,7 @@ class Toolbar {
   String title, credit, explanation;
   ArrayList<ControlSlider> sliders;
   ArrayList<RadioButton> buttons;
+  ArrayList<TriSlider> tSliders;
   
   Toolbar(int barX, int barY, int barW, int barH, int margin) {
     this.barX = barX;
@@ -19,15 +26,15 @@ class Toolbar {
     this.margin = margin;
     contentW = barW - 2*margin;
     contentH = barH - 2*margin;
-    sliders = new ArrayList<ControlSlider>();
-    buttons = new ArrayList<RadioButton>();
+    sliders  = new ArrayList<ControlSlider>();
+    buttons  = new ArrayList<RadioButton>();
+    tSliders = new ArrayList<TriSlider>();
     controlY = 300;
   }
   
   void addSlider(String name, String unit, int valMin, int valMax, float DEFAULT_VALUE, char keyMinus, char keyPlus) {
-    int num = sliders.size() + buttons.size();
+    int num = sliders.size() + buttons.size() + 6*tSliders.size();
     ControlSlider s;
-    
     s = new ControlSlider();
     s.name = name;
     s.unit = unit;
@@ -44,9 +51,8 @@ class Toolbar {
   }
   
   void addButton(String name, boolean DEFAULT_VALUE, char keyToggle) {
-    int num = sliders.size() + buttons.size();
+    int num = sliders.size() + buttons.size() + 6*tSliders.size();
     RadioButton b;
-    
     b = new RadioButton();
     b.name = name;
     b.keyToggle = keyToggle;
@@ -57,18 +63,49 @@ class Toolbar {
     buttons.add(b);
   }
   
+  void addTriSlider(String name, String name1, int col1, String name2, int col2, String name3, int col3) {
+    int num = sliders.size() + buttons.size() + 6*tSliders.size();
+    TriSlider t;
+    t = new TriSlider();
+    t.name = name;
+    t.name1 = name1;
+    t.col1 = col1;
+    t.name2 = name2;
+    t.col2 = col2;
+    t.name3 = name3;
+    t.col3 = col3;
+    t.xpos = barX + margin;
+    t.ypos = controlY + num*V_OFFSET;
+    t.corner1.x = barX + 0.50*barW;
+    t.corner1.y = controlY + (num+0.20)*V_OFFSET;
+    t.corner2.x = barX + 0.3*barW;
+    t.corner2.y = controlY + (num+2.70)*V_OFFSET;
+    t.corner3.x = barX + 0.7*barW;
+    t.corner3.y = controlY + (num+2.70)*V_OFFSET;
+    t.avgX = (t.corner1.x+t.corner2.x+t.corner3.x)/3.0;
+    t.avgY = (t.corner1.y+t.corner2.y+t.corner3.y)/3.0;
+    t.avg = new PVector(t.avgX, t.avgY);
+    t.r = t.avg.dist(t.corner1);
+    t.pt = new PVector(t.avgX, t.avgY);
+    t.calculateValues();
+    tSliders.add(t);
+  }
+  
   void pressed() {
-    if (sliders.size() > 0) for (ControlSlider s: sliders) s.listen();
-    if (buttons.size() > 0) for (RadioButton   b: buttons) b.listen();
+    if (sliders.size()  > 0) for (ControlSlider s: sliders ) s.listen();
+    if (buttons.size()  > 0) for (RadioButton   b: buttons ) b.listen();
+    if (tSliders.size() > 0) for (TriSlider     t: tSliders) t.listen();
   }
   
   void released() {
-    if (sliders.size() > 0) for (ControlSlider s: sliders) s.isDragged = false;
+    if (sliders.size()  > 0) for (ControlSlider s: sliders ) s.isDragged = false;
+    if (tSliders.size() > 0) for (TriSlider     t: tSliders) t.isDragged = false;
   }
   
   void restoreDefault() {
-    if (sliders.size() > 0) for (ControlSlider s: sliders) s.value = s.DEFAULT_VALUE;
-    if (buttons.size() > 0) for (RadioButton   b: buttons) b.value = b.DEFAULT_VALUE;
+    if (sliders.size()  > 0) for (ControlSlider s: sliders ) s.value = s.DEFAULT_VALUE;
+    if (buttons.size()  > 0) for (RadioButton   b: buttons ) b.value = b.DEFAULT_VALUE;
+    if (tSliders.size() > 0) for (TriSlider     t: tSliders) t.pt    = new PVector(t.avgX, t.avgY);
   }
   
   // Draw Margin Elements
@@ -110,6 +147,12 @@ class Toolbar {
     // Buttons
     for (RadioButton b: buttons) {
       b.drawMe();
+    }
+    
+    // TriSliders
+    for (TriSlider t: tSliders) {
+      t.update();
+      t.drawMe();
     }
     
     hint(ENABLE_DEPTH_TEST);
@@ -254,5 +297,129 @@ class RadioButton {
     ellipse(xpos+0.5*diameter,ypos,0.7*diameter,0.7*diameter);
     
     popMatrix();
+  }
+}
+
+// Class that maps a point within a triangle to 3 values that add to 1.0
+//
+class TriSlider {
+  float value1, value2, value3;
+  String name, name1, name2, name3;
+  int col1, col2, col3;
+  int xpos, ypos;
+  PVector pt, corner1, corner2, corner3;
+  int diameter;
+  boolean isDragged;
+  float avgX, avgY, r;
+  PVector avg;
+  
+  TriSlider() {
+    diameter = 15;
+    corner1 = new PVector(0, 0);
+    corner2 = new PVector(0, 0);
+    corner3 = new PVector(0, 0);
+    pt      = new PVector(0, 0);
+    xpos = 0;
+    ypos = 0;
+    isDragged = false;
+    // Default
+    value1 = 0.1;
+    value2 = 0.2;
+    value3 = 0.7;
+  }
+  
+  void listen() {
+    PVector mouse = new PVector(mouseX, mouseY);
+    if (mouse.dist(avg) < r) isDragged = true;
+  }
+  
+  void update() {
+    
+    // Update Mouse Condition
+    if(isDragged || keyPressed) {
+      PVector mouse = new PVector(mouseX, mouseY);
+      if(mouse.dist(avg) > r && isDragged) {
+        PVector ray = new PVector(mouse.x - avg.x, mouse.y - avg.y);
+        ray.setMag(r);
+        mouse = new PVector(avg.x, avg.y);
+        mouse.add(ray);
+      }
+      if (mousePressed && isDragged) {
+        pt.x = mouse.x;
+        pt.y = mouse.y;
+      }
+      calculateValues();
+    }
+  }
+  
+  void calculateValues() {
+    // Update Values
+    float dist1, dist2, dist3;
+    float pow = 3;
+    float maxDist = 1.45*r;
+    if (pt.dist(corner1) > maxDist) {
+      dist1 = 0;
+    } else {
+      dist1 = 1 / pow(pt.dist(corner1) + 0.00001, pow);
+    }
+    if (pt.dist(corner2) > maxDist) {
+      dist2 = 0;
+    } else {
+      dist2 = 1 / pow(pt.dist(corner2) + 0.00001, pow);
+    }
+    if (pt.dist(corner3) > maxDist) {
+      dist3 = 0;
+    } else {
+      dist3 = 1 / pow(pt.dist(corner3) + 0.00001, pow);
+    }
+    float sum = dist1 + dist2 + dist3;
+    
+    dist1 /= sum;
+    dist2 /= sum;
+    dist3 /= sum;
+    value1 = dist1;
+    value2 = dist2;
+    value3 = dist3;
+  }
+  
+  void drawMe() {
+    // Draw Background Circle + Triangle
+    //
+    noStroke();
+    fill(50, 150);
+    ellipse(avg.x+3, avg.y+3, 2*r, 2*r);
+    fill(100, 150);
+    ellipse(avg.x, avg.y, 2*r, 2*r);
+    fill(100);
+    beginShape();
+    vertex(corner1.x, corner1.y);
+    vertex(corner2.x, corner2.y);
+    vertex(corner3.x, corner3.y);
+    endShape(CLOSE);
+    
+    // Draw Cursor
+    //
+    fill(255);
+    ellipse(pt.x, pt.y, diameter, diameter);
+    
+    // Draw Element Meta Information
+    //
+    textAlign(LEFT, TOP);
+    text(name, xpos, ypos-16);
+    textAlign(CENTER, BOTTOM); fill(col1);
+    text(name1, avg.x,          avg.y+1.5*r);
+    textAlign(LEFT,   BOTTOM); fill(col2);
+    text(name2, xpos,           avg.y+1.5*r);
+    textAlign(RIGHT,  BOTTOM); fill(col3);
+    text(name3, xpos+2*(avg.x-xpos), avg.y+1.5*r);
+    textAlign(CENTER, TOP);
+    fill(col1);
+    text(int(100*value1+0.5)+ "%", corner1.x, ypos-16);
+    textAlign(RIGHT, TOP);
+    fill(col2);
+    text(int(100*value2+0.5) + "%   ", corner2.x, corner2.y);
+    textAlign(LEFT, TOP);
+    fill(col3);
+    text("   " + int(100*value3+0.5) + "%", corner3.x, corner3.y);
   }
 }
