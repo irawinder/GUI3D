@@ -1,11 +1,10 @@
 int controlOffset = 300;
   
 class Toolbar {
-  int barWidth;
-  int GAP;           // pixel distance from edge of screen
-  int u_width;       // pixel width of margin content
-  int V_OFFSET = 35; // standard vertical pixel distance between control elements
-  int U_OFFSET = 25; // standard horizontal pixel distance from edge of canvas
+  int barX, barY, barW, barH; // X, Y, Width, and Height of Toolbar on Screen
+  int contentW, contentH;     // pixel width and height of toolbar content accounting for margin
+  int margin;                 // standard internal pixel buffer distance from edge of canvas
+  int V_OFFSET = 35;          // standard vertical pixel distance between control elements
   
   String title, credit, explanation;
   
@@ -18,10 +17,14 @@ class Toolbar {
   RadioButton b2;
   RadioButton b3;
   
-  Toolbar(int w, int g) {
-    barWidth = w;
-    GAP = g;
-    u_width = barWidth - 3*U_OFFSET;
+  Toolbar(int barX, int barY, int barW, int barH, int margin) {
+    this.barX = barX;
+    this.barY = barY;
+    this.barW = barW;
+    this.barH = barH;
+    this.margin = margin;
+    contentW = barW - 2*margin;
+    contentH = barH - 2*margin;
     initControls();
   }
   
@@ -33,9 +36,9 @@ class Toolbar {
     s1.unit = "%";
     s1.keyPlus = 'w';
     s1.keyMinus = 'q';
-    s1.xpos = GAP + U_OFFSET;
+    s1.xpos = barX + margin;
     s1.ypos = controlOffset + num*V_OFFSET;
-    s1.len = u_width;
+    s1.len = contentW - margin;
     s1.valMin = 0;
     s1.valMax = 100;
     s1.value = 50;
@@ -47,9 +50,9 @@ class Toolbar {
     s2.unit = "%";
     s2.keyPlus = 's';
     s2.keyMinus = 'a';
-    s2.xpos = GAP + U_OFFSET;
+    s2.xpos = barX + margin;
     s2.ypos = controlOffset + num*V_OFFSET;
-    s2.len = u_width;
+    s2.len = contentW - margin;
     s2.valMin = 0;
     s2.valMax = 100;
     s2.value = 50;
@@ -61,9 +64,9 @@ class Toolbar {
     s3.unit = "%";
     s3.keyPlus = 'x';
     s3.keyMinus = 'z';
-    s3.xpos = GAP + U_OFFSET;
+    s3.xpos = barX + margin;
     s3.ypos = controlOffset + num*V_OFFSET;
-    s3.len = u_width;
+    s3.len = contentW - margin;
     s3.valMin = 0;
     s3.valMax = 100;
     s3.value = 50;
@@ -71,13 +74,13 @@ class Toolbar {
     num++;
     
     s4 = new ControlSlider();
-    s4.name = "Slider 3";
+    s4.name = "Slider 4";
     s4.unit = "%";
-    s4.keyPlus = 'x';
-    s4.keyMinus = 'z';
-    s4.xpos = GAP + U_OFFSET;
+    s4.keyPlus = 'r';
+    s4.keyMinus = 'e';
+    s4.xpos = barX + margin;
     s4.ypos = controlOffset + num*V_OFFSET;
-    s4.len = u_width;
+    s4.len = contentW - margin;
     s4.valMin = 0;
     s4.valMax = 100;
     s4.value = 50;
@@ -87,7 +90,7 @@ class Toolbar {
     b1 = new RadioButton();
     b1.name = "Button 1";
     b1.keyToggle = '1';
-    b1.xpos = GAP + U_OFFSET;
+    b1.xpos = barX + margin;
     b1.ypos = controlOffset + num*V_OFFSET;
     b1.value = false;
     
@@ -96,7 +99,7 @@ class Toolbar {
     b2 = new RadioButton();
     b2.name = "Button 2";
     b2.keyToggle = '2';
-    b2.xpos = GAP + U_OFFSET;
+    b2.xpos = barX + margin;
     b2.ypos = controlOffset + num*V_OFFSET;
     b2.value = false;
     
@@ -105,7 +108,7 @@ class Toolbar {
     b3 = new RadioButton();
     b3.name = "Button 3";
     b3.keyToggle = '3';
-    b3.xpos = GAP + U_OFFSET;
+    b3.xpos = barX + margin;
     b3.ypos = controlOffset + num*V_OFFSET;
     b3.value = false;
   }
@@ -148,24 +151,24 @@ class Toolbar {
     hint(DISABLE_DEPTH_TEST);
     
     pushMatrix();
-    translate(GAP, GAP);
+    translate(barX, barX);
     
     // Shadow
     pushMatrix();
     translate(3, 3);
     noStroke();
     fill(0, 100);
-    rect(0, 0, barWidth, height - 2*GAP, GAP);
+    rect(0, 0, barW, barH, margin);
     popMatrix();
     
     // Canvas
     fill(255, 50);
     noStroke();
-    rect(0, 0, barWidth, height - 2*GAP, GAP);
-    translate(U_OFFSET, U_OFFSET);
+    rect(0, 0, barW, barH, margin);
+    translate(margin, margin);
     textAlign(LEFT, TOP);
     fill(255);
-    text(title + "\n" + credit + "\n\n" + explanation, 0, 0, barWidth - 2*U_OFFSET, height - 2*GAP - 2*U_OFFSET);
+    text(title + "\n" + credit + "\n\n" + explanation, 0, 0, contentW, contentH);
     popMatrix();
     
     s1.update();
@@ -188,8 +191,8 @@ class Toolbar {
   }
   
   boolean hover() {
-    if (mouseX > GAP && mouseX < GAP + barWidth && 
-        mouseY > GAP && mouseY < height - GAP) {
+    if (mouseX > barX && mouseX < barX + barW && 
+        mouseY > barY && mouseY < barY + barH) {
       return true;
     } else {
       return false;

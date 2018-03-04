@@ -259,6 +259,8 @@ class Camera {
   }
 }
 
+// Horizontal Slider
+//
 class HScrollbar {
   float swidth, sheight;  // width and height of bar
   float xpos, ypos;       // x and y position of bar
@@ -341,7 +343,9 @@ class HScrollbar {
     return 2 * PI * (spos-sposMin) / (swidth-sheight);
   }
 }
-  
+
+// Vertical Slider
+//
 class VScrollbar {
   float swidth, sheight;    // width and height of bar
   float xpos, ypos;       // x and y position of bar
