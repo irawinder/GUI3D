@@ -35,7 +35,7 @@ void setup() {
   bar_left.title = "UI3D Visualization Template";
   bar_left.credit = "(Left-hand Toolbar)";
   bar_left.explanation = "";
-  bar_left.controlY = BAR_Y + 100;
+  bar_left.controlY = BAR_Y + bar_left.margin + 2*bar_left.CONTROL_H;
   bar_left.addSlider("Slider A", "%", 0, 100, 25, 'q', 'w');
   bar_left.addSlider("Slider B", "%", 0, 100, 50, 'a', 's');
   bar_left.addSlider("SPACER",   "%", 0, 100, 50, 'a', 's');
@@ -46,14 +46,14 @@ void setup() {
   bar_left.addSlider("Slider F", "%", 0, 100, 75, ',', '.');
   bar_left.addSlider("SPACER",   "%", 0, 100, 50, 'a', 's');
   bar_left.addTriSlider("TriSlider", "value1", #FF00FF, "value2", #FFFF00, "value3", #00FFFF);
-  bar_left.addButton("Item A", true, '1');
-  bar_left.addButton("Item B", true, '2');
-  bar_left.addButton("Item C", true, '3');
-  bar_left.addButton("Item D", true, '4');
-  bar_left.addButton("Item W", true, '1');
-  bar_left.addButton("Item X", true, '2');
-  bar_left.addButton("Item Y", true, '3');
-  bar_left.addButton("Item Z", true, '4');
+  bar_left.addButton("Item A", 200, true, '1');
+  bar_left.addButton("Item B", 200, true, '2');
+  bar_left.addButton("Item C", 200, true, '3');
+  bar_left.addButton("Item D", 200, true, '4');
+  bar_left.addButton("Item W", 200, true, '1');
+  bar_left.addButton("Item X", 200, true, '2');
+  bar_left.addButton("Item Y", 200, true, '3');
+  bar_left.addButton("Item Z", 200, true, '4');
   for (int i=0; i<4; i++) {
     bar_left.buttons.get(i+4).xpos = bar_left.barX + bar_left.barW/2; 
     bar_left.buttons.get(i+4).ypos = bar_left.buttons.get(i).ypos;
@@ -71,12 +71,12 @@ void setup() {
   bar_right.explanation = "Framework for explorable 3D model parameterized with sliders, radio buttons, and 3D Cursor.";
   bar_right.explanation += "\n\nAdd outputs, summary data, or ore inputs here.";
   bar_right.explanation += "\n\nPress ' d ' to reset all inputs\nPress ' p ' to print camera settings";
-  bar_right.controlY = BAR_Y + 230;
-  bar_right.addButton("Button D", true, '5');
-  bar_right.addButton("Button E", false,'6');
-  bar_right.addButton("Button F", true, '7');
-  bar_right.addButton("Button G", true, '8');
-  bar_right.addButton("Button H", true, '9');
+  bar_right.controlY = BAR_Y + bar_left.margin + 6*bar_left.CONTROL_H;
+  bar_right.addButton("Button D", 200, true, '5');
+  bar_right.addButton("Button E", 200, false,'6');
+  bar_right.addButton("Button F", 200, true, '7');
+  bar_right.addButton("Button G", 200, true, '8');
+  bar_right.addButton("Button H", 200, true, '9');
   bar_right.addSlider("SPACER", "kg", 50, 100, 72, '<', '>');
   bar_right.addSlider("Slider 1", "kg", 50, 100, 72, '<', '>');
   bar_right.addSlider("Slider 2", "kg", 50, 100, 72, '<', '>');
@@ -184,9 +184,11 @@ void draw() {
   hint(DISABLE_DEPTH_TEST);
   camera(); noLights(); perspective(); 
   
-  // Arrow-Object: Draw Cursor Text
-  noFill(); stroke(#FFFF00, 200);
+  // Diameter of Cursor Objects
   float diam = min(100, 5/pow(cam.zoom, 2));
+  
+  // Arrow-Object: Draw Cursor Ellipse and Text
+  noFill(); stroke(#FFFF00, 200);
   ellipse(s_x, s_y, diam, diam);
   fill(#FFFF00, 200); textAlign(LEFT, CENTER);
   text("OBJECT: Move with Arrow Keys", s_x + 0.6*diam, s_y);

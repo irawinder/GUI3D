@@ -10,7 +10,7 @@ class Toolbar {
   int barX, barY, barW, barH; // X, Y, Width, and Height of Toolbar on Screen
   int contentW, contentH;     // pixel width and height of toolbar content accounting for margin
   int margin;                 // standard internal pixel buffer distance from edge of canvas
-  int V_OFFSET = 35;          // standard vertical pixel distance between control elements
+  int CONTROL_H = 35;          // standard vertical pixel distance between control elements
   int controlY;          // vertical position where controls begin
   
   String title, credit, explanation;
@@ -29,7 +29,7 @@ class Toolbar {
     sliders  = new ArrayList<ControlSlider>();
     buttons  = new ArrayList<RadioButton>();
     tSliders = new ArrayList<TriSlider>();
-    controlY = 300;
+    controlY = 8*CONTROL_H;
   }
   
   void addSlider(String name, String unit, int valMin, int valMax, float DEFAULT_VALUE, char keyMinus, char keyPlus) {
@@ -41,7 +41,7 @@ class Toolbar {
     s.keyPlus = keyPlus;
     s.keyMinus = keyMinus;
     s.xpos = barX + margin;
-    s.ypos = controlY + int(num*V_OFFSET);
+    s.ypos = controlY + int(num*CONTROL_H);
     s.len = contentW - margin;
     s.valMin = valMin;
     s.valMax = valMax;
@@ -50,16 +50,17 @@ class Toolbar {
     sliders.add(s);
   }
   
-  void addButton(String name, boolean DEFAULT_VALUE, char keyToggle) {
+  void addButton(String name, int col, boolean DEFAULT_VALUE, char keyToggle) {
     float num = sliders.size() + buttons.size() + 6*tSliders.size();
     RadioButton b;
     b = new RadioButton();
     b.name = name;
     b.keyToggle = keyToggle;
     b.xpos = barX + margin;
-    b.ypos = controlY + int(num*V_OFFSET);
+    b.ypos = controlY + int(num*CONTROL_H);
     b.DEFAULT_VALUE = DEFAULT_VALUE;
     b.value = b.DEFAULT_VALUE;
+    b.col = col;
     buttons.add(b);
   }
   
@@ -75,13 +76,13 @@ class Toolbar {
     t.name3 = name3;
     t.col3 = col3;
     t.xpos = barX + margin;
-    t.ypos = controlY + int(num*V_OFFSET);
+    t.ypos = controlY + int(num*CONTROL_H);
     t.corner1.x = barX + 0.50*barW;
-    t.corner1.y = controlY + (num+0.20)*V_OFFSET;
+    t.corner1.y = controlY + (num+0.70)*CONTROL_H;
     t.corner2.x = barX + 0.33*barW;
-    t.corner2.y = controlY + (num+2.40)*V_OFFSET;
+    t.corner2.y = controlY + (num+2.90)*CONTROL_H;
     t.corner3.x = barX + 0.67*barW;
-    t.corner3.y = controlY + (num+2.40)*V_OFFSET;
+    t.corner3.y = controlY + (num+2.90)*CONTROL_H;
     t.avgX = (t.corner1.x+t.corner2.x+t.corner3.x)/3.0;
     t.avgY = (t.corner1.y+t.corner2.y+t.corner3.y)/3.0;
     t.avg = new PVector(t.avgX, t.avgY);
@@ -127,7 +128,7 @@ class Toolbar {
     popMatrix();
     
     // Canvas
-    fill(255, 50);
+    fill(255, 20);
     noStroke();
     rect(0, 0, barW, barH, margin);
     
@@ -220,7 +221,7 @@ class ControlSlider {
     strokeWeight(1);
     fill(255);
     textAlign(LEFT, BOTTOM);
-    text(name + " - " + keyMinus + " , " + keyPlus + " ",xpos,ypos-0.75*diameter);
+    text( "[" + keyMinus + "," + keyPlus + "] " + name,xpos,ypos-0.75*diameter);
     textAlign(LEFT, CENTER);
     text(int(value) + " " + unit,xpos+6+len,ypos-1);
     
@@ -282,7 +283,7 @@ class RadioButton {
     if (value) { fill(255); }
     else       { fill(150); } 
     textAlign(LEFT, CENTER);
-    text(name + " [" + keyToggle + "]",xpos + 1.5*diameter,ypos);
+    text("[" + keyToggle + "] " + name,xpos + 1.5*diameter,ypos);
     
     // Button Holder
     noStroke(); fill(50);
@@ -406,15 +407,15 @@ class TriSlider {
     //
     textAlign(LEFT, TOP);
     text(name, xpos, ypos-16);
-    textAlign(CENTER, BOTTOM); fill(col1);
+    textAlign(CENTER, CENTER); fill(col1);
     text(name1, avg.x,          avg.y+1.5*r);
-    textAlign(LEFT,   BOTTOM); fill(col2);
+    textAlign(LEFT,   CENTER); fill(col2);
     text(name2, xpos,           avg.y+1.5*r);
-    textAlign(RIGHT,  BOTTOM); fill(col3);
+    textAlign(RIGHT,  CENTER); fill(col3);
     text(name3, xpos+2*(avg.x-xpos), avg.y+1.5*r);
     textAlign(CENTER, TOP);
     fill(col1);
-    text(int(100*value1+0.5)+ "%", corner1.x, ypos-16);
+    text(int(100*value1+0.5)+ "%", corner1.x, ypos);
     textAlign(RIGHT, TOP);
     fill(col2);
     text(int(100*value2+0.5) + "%   ", corner2.x, corner2.y);
