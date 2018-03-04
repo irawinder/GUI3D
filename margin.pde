@@ -76,8 +76,8 @@ class Toolbar {
     s4 = new ControlSlider();
     s4.name = "Slider 4";
     s4.unit = "%";
-    s4.keyPlus = 'r';
-    s4.keyMinus = 'e';
+    s4.keyPlus = ']';
+    s4.keyMinus = '[';
     s4.xpos = barX + margin;
     s4.ypos = controlOffset + num*V_OFFSET;
     s4.len = contentW - margin;
@@ -151,11 +151,10 @@ class Toolbar {
     hint(DISABLE_DEPTH_TEST);
     
     pushMatrix();
-    translate(barX, barX);
+    translate(barX, barY);
     
     // Shadow
-    pushMatrix();
-    translate(3, 3);
+    pushMatrix(); translate(3, 3);
     noStroke();
     fill(0, 100);
     rect(0, 0, barW, barH, margin);
@@ -165,6 +164,8 @@ class Toolbar {
     fill(255, 50);
     noStroke();
     rect(0, 0, barW, barH, margin);
+    
+    // Canvas Content
     translate(margin, margin);
     textAlign(LEFT, TOP);
     fill(255);
@@ -257,9 +258,14 @@ class ControlSlider {
     text(int(value) + " " + unit,xpos+6+len,ypos-1);
     
     // Slider Bar
-    fill(100);
-    noStroke();
-    rect(xpos,ypos-0.15*diameter,len,0.3*diameter,diameter);
+    fill(100); noStroke();
+    rect(xpos,ypos-0.15*diameter,len,0.3*diameter,0.3*diameter);
+    // Bar Indentation
+    fill(50);
+    rect(xpos+3,ypos-1,len-6,0.15*diameter,0.15*diameter);
+    // Bar Positive Fill
+    fill(150);
+    rect(xpos+3,ypos-1,0.5*diameter+(len-1.0*diameter)*(value-valMin)/(valMax-valMin),0.15*diameter,0.15*diameter);
     
     // Slider Circle
     noStroke();
@@ -285,7 +291,7 @@ class RadioButton {
     diameter = 20;
     keyToggle = ' ';
     value = false;
-    col = #FFFFFF;
+    col = 200;
   }
   
   void listen() {
@@ -303,7 +309,8 @@ class RadioButton {
     
     // Button Info
     strokeWeight(1);
-    fill(255);
+    if (value) { fill(255); }
+    else       { fill(150); } 
     textAlign(LEFT, CENTER);
     text(name,xpos + 1.5*diameter,ypos);
     

@@ -98,10 +98,10 @@ class Camera {
     int thirdPix  = int(0.3*height);
     
     // Initialize Horizontal Scrollbar
-    hs = new HScrollbar(width - margin - thirdPix, height - 1.5*margin, thirdPix, margin, 5);
+    hs = new HScrollbar(width/2 - thirdPix/2, height - 1.5*margin, thirdPix, margin, 5);
     
     // Initialize Vertical Scrollbar
-    vs = new VScrollbar(width - int(1.5*margin), margin, margin, thirdPix, 5);
+    vs = new VScrollbar(eX + eW - int(1.5*margin), margin, margin, thirdPix, 5);
     
     // Initialize Drag Funciton
     drag = new XYDrag(1.0, 7, eX, eY, eW, eH);
@@ -243,14 +243,15 @@ class Camera {
     vs.display(LINE_COLOR, BASE_ALPHA);
     
     // Draw Help Text
-    pushMatrix();
-    translate(width/2, margin);
+    pushMatrix(); translate(width/2, margin);
     fill(LINE_COLOR, 255-BASE_ALPHA);
     textAlign(CENTER, TOP);
     text("Press 'r' to reset camera position", 0, 0);
     if (showFrameRate) text("(F)ramerate: " + int(frameRate*10)/10.0, 0, 32);
-    translate(0, height - 2*margin);
-    textAlign(CENTER, BOTTOM);
+    popMatrix();
+    
+    pushMatrix(); translate(width/4 + eX/2 - 0.075*height, height - 1.5*margin);
+    textAlign(CENTER, CENTER);
     fill(LINE_COLOR, 255-2*BASE_ALPHA);
     text("Copyright 2018 Ira Winder", 0, 0);
     popMatrix();

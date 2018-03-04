@@ -29,17 +29,25 @@ void setup() {
   BAR_Y = MARGIN;
   BAR_W = 250;
   BAR_H = height - 2*MARGIN;
-  bar = new Toolbar(BAR_X, BAR_Y, BAR_W, BAR_H, MARGIN);
-  bar.title = "UI3D Visualization Template";
-  bar.credit = "Ira Winder, 2018";
-  bar.explanation = "Use these scripts as the framework for an explorable 3D model parameterized with sliders, radio buttons, and 3d Object Placement.";
-  bar.explanation += "\n\nPress ' d ' to reset all inputs\nPress ' p ' to print camera to cons.";
+  
+  // Left Toolbar
+  bar_left = new Toolbar(BAR_X, BAR_Y, BAR_W, BAR_H, MARGIN);
+  bar_left.title = "UI3D Visualization Template";
+  bar_left.credit = "(Left-hand Toolbar)";
+  bar_left.explanation = "Use these scripts as the framework for an explorable 3D model parameterized with sliders, radio buttons, and 3d Object Placement.";
+  bar_left.explanation += "\n\nPress ' d ' to reset all inputs\nPress ' p ' to print camera to cons.";
+  
+  // Right Toolbar
+  bar_right = new Toolbar(width - (BAR_X + BAR_W), BAR_Y, BAR_W, BAR_H, MARGIN);
+  bar_right.title = "Analysis";
+  bar_right.credit = "(Right-hand Toolbar)";
+  bar_right.explanation = "Add outputs and summary data here.";
   
   // Initialize 3D World Camera Defaults
   cam = new Camera (B, MARGIN);
   // eX, eW (extentsX ...) prevents accidental dragging when interactiong with toolbar
   cam.eX = MARGIN + BAR_W;
-  cam.eW = width - BAR_W - MARGIN;
+  cam.eW = width - 2*(BAR_W + MARGIN);
   cam.ZOOM_DEFAULT = 0.3;
   cam.ZOOM_POW = 1.75;
   cam.ZOOM_MAX = 0.1;
@@ -149,12 +157,14 @@ void draw() {
   cam.drawControls();
   
   // Draw Margin Toolbar
-  bar.draw();
+  bar_left.draw();
+  bar_right.draw();
 }
 
 void mousePressed() {
   cam.pressed();
-  bar.pressed();
+  bar_left.pressed();
+  bar_right.pressed();
 }
 
 void mouseClicked() {
@@ -164,7 +174,8 @@ void mouseClicked() {
 }
 
 void mouseReleased() {
-  bar.released();
+  bar_left.released();
+  bar_right.released();
   cam.moved();
 }
 
@@ -174,7 +185,8 @@ void mouseMoved() {
 
 void keyPressed() {
   cam.moved();
-  bar.pressed();
+  bar_left.pressed();
+  bar_right.pressed();
   
   switch(key) {
     case 'f':
@@ -185,7 +197,8 @@ void keyPressed() {
       break;
     case 'd':
       additions.clear();
-      bar.restoreDefault();
+      bar_left.restoreDefault();
+      bar_right.restoreDefault();
       break;
     case 'p':
       println("cam.offset.x = " + cam.offset.x);
