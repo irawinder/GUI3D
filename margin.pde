@@ -1,21 +1,15 @@
-int controlOffset = 300;
+
   
 class Toolbar {
   int barX, barY, barW, barH; // X, Y, Width, and Height of Toolbar on Screen
   int contentW, contentH;     // pixel width and height of toolbar content accounting for margin
   int margin;                 // standard internal pixel buffer distance from edge of canvas
   int V_OFFSET = 35;          // standard vertical pixel distance between control elements
+  int controlY;          // vertical position where controls begin
   
   String title, credit, explanation;
-  
-  ControlSlider s1;
-  ControlSlider s2;
-  ControlSlider s3;
-  ControlSlider s4;
-  
-  RadioButton b1;
-  RadioButton b2;
-  RadioButton b3;
+  ArrayList<ControlSlider> sliders;
+  ArrayList<RadioButton> buttons;
   
   Toolbar(int barX, int barY, int barW, int barH, int margin) {
     this.barX = barX;
@@ -25,121 +19,56 @@ class Toolbar {
     this.margin = margin;
     contentW = barW - 2*margin;
     contentH = barH - 2*margin;
-    initControls();
+    sliders = new ArrayList<ControlSlider>();
+    buttons = new ArrayList<RadioButton>();
+    controlY = 300;
   }
   
-  void initControls() {
-    int num = 0;
+  void addSlider(String name, String unit, int valMin, int valMax, float DEFAULT_VALUE, char keyMinus, char keyPlus) {
+    int num = sliders.size() + buttons.size();
+    ControlSlider s;
     
-    s1 = new ControlSlider();
-    s1.name = "Slider 1";
-    s1.unit = "%";
-    s1.keyPlus = 'w';
-    s1.keyMinus = 'q';
-    s1.xpos = barX + margin;
-    s1.ypos = controlOffset + num*V_OFFSET;
-    s1.len = contentW - margin;
-    s1.valMin = 0;
-    s1.valMax = 100;
-    s1.value = 50;
+    s = new ControlSlider();
+    s.name = name;
+    s.unit = unit;
+    s.keyPlus = keyPlus;
+    s.keyMinus = keyMinus;
+    s.xpos = barX + margin;
+    s.ypos = controlY + num*V_OFFSET;
+    s.len = contentW - margin;
+    s.valMin = valMin;
+    s.valMax = valMax;
+    s.DEFAULT_VALUE = DEFAULT_VALUE;
+    s.value = s.DEFAULT_VALUE;
+    sliders.add(s);
+  }
+  
+  void addButton(String name, boolean DEFAULT_VALUE, char keyToggle) {
+    int num = sliders.size() + buttons.size();
+    RadioButton b;
     
-    num++;
-    
-    s2 = new ControlSlider();
-    s2.name = "Slider 2";
-    s2.unit = "%";
-    s2.keyPlus = 's';
-    s2.keyMinus = 'a';
-    s2.xpos = barX + margin;
-    s2.ypos = controlOffset + num*V_OFFSET;
-    s2.len = contentW - margin;
-    s2.valMin = 0;
-    s2.valMax = 100;
-    s2.value = 50;
-    
-    num++;
-    
-    s3 = new ControlSlider();
-    s3.name = "Slider 3";
-    s3.unit = "%";
-    s3.keyPlus = 'x';
-    s3.keyMinus = 'z';
-    s3.xpos = barX + margin;
-    s3.ypos = controlOffset + num*V_OFFSET;
-    s3.len = contentW - margin;
-    s3.valMin = 0;
-    s3.valMax = 100;
-    s3.value = 50;
-    
-    num++;
-    
-    s4 = new ControlSlider();
-    s4.name = "Slider 4";
-    s4.unit = "%";
-    s4.keyPlus = ']';
-    s4.keyMinus = '[';
-    s4.xpos = barX + margin;
-    s4.ypos = controlOffset + num*V_OFFSET;
-    s4.len = contentW - margin;
-    s4.valMin = 0;
-    s4.valMax = 100;
-    s4.value = 50;
-    
-    num+=2;
-    
-    b1 = new RadioButton();
-    b1.name = "Button 1";
-    b1.keyToggle = '1';
-    b1.xpos = barX + margin;
-    b1.ypos = controlOffset + num*V_OFFSET;
-    b1.value = false;
-    
-    num++;
-    
-    b2 = new RadioButton();
-    b2.name = "Button 2";
-    b2.keyToggle = '2';
-    b2.xpos = barX + margin;
-    b2.ypos = controlOffset + num*V_OFFSET;
-    b2.value = false;
-    
-    num++;
-    
-    b3 = new RadioButton();
-    b3.name = "Button 3";
-    b3.keyToggle = '3';
-    b3.xpos = barX + margin;
-    b3.ypos = controlOffset + num*V_OFFSET;
-    b3.value = false;
+    b = new RadioButton();
+    b.name = name;
+    b.keyToggle = keyToggle;
+    b.xpos = barX + margin;
+    b.ypos = controlY + num*V_OFFSET;
+    b.DEFAULT_VALUE = DEFAULT_VALUE;
+    b.value = b.DEFAULT_VALUE;
+    buttons.add(b);
   }
   
   void pressed() {
-    s1.listen();
-    s2.listen();
-    s3.listen(); 
-    s4.listen(); 
-    
-    b1.listen(); 
-    b2.listen(); 
-    b3.listen(); 
+    if (sliders.size() > 0) for (ControlSlider s: sliders) s.listen();
+    if (buttons.size() > 0) for (RadioButton   b: buttons) b.listen();
   }
   
   void released() {
-    s1.isDragged = false;
-    s2.isDragged = false;
-    s3.isDragged = false;
-    s4.isDragged = false;
+    if (sliders.size() > 0) for (ControlSlider s: sliders) s.isDragged = false;
   }
   
   void restoreDefault() {
-    s1.value = 50;
-    s2.value = 50;
-    s3.value = 50;
-    s4.value = 50;
-    
-    b1.value = false;
-    b2.value = false;
-    b3.value = false;
+    if (sliders.size() > 0) for (ControlSlider s: sliders) s.value = s.DEFAULT_VALUE;
+    if (buttons.size() > 0) for (RadioButton   b: buttons) b.value = b.DEFAULT_VALUE;
   }
   
   // Draw Margin Elements
@@ -172,21 +101,16 @@ class Toolbar {
     text(title + "\n" + credit + "\n\n" + explanation, 0, 0, contentW, contentH);
     popMatrix();
     
-    s1.update();
-    s1.drawMe();
+    // Sliders
+    for (ControlSlider s: sliders) {
+      s.update();
+      s.drawMe();
+    }
     
-    s2.update();
-    s2.drawMe();
-    
-    s3.update();
-    s3.drawMe();
-    
-    s4.update();
-    s4.drawMe();
-    
-    b1.drawMe();
-    b2.drawMe();
-    b3.drawMe();
+    // Buttons
+    for (RadioButton b: buttons) {
+      b.drawMe();
+    }
     
     hint(ENABLE_DEPTH_TEST);
   }
@@ -214,6 +138,7 @@ class ControlSlider {
   int valMin;
   int valMax;
   float value;
+  float DEFAULT_VALUE = 0;
   
   ControlSlider() {
     xpos = 0;
@@ -229,22 +154,21 @@ class ControlSlider {
   }
   
   void update() {
-    //Keyboard Controls
-    if ((keyPressed == true) && (key == keyMinus)) {value--;}
-    if ((keyPressed == true) && (key == keyPlus))  {value++;}
-    
     if (isDragged) {
       value = (mouseX-xpos)*(valMax-valMin)/len+valMin;
     }
-  
     if(value < valMin) value = valMin;
     if(value > valMax) value = valMax;
   }
   
   void listen() {
-    if((mouseY > (ypos-diameter/2)) && (mouseY < (ypos+diameter/2)) && (mouseX > (xpos-diameter/2)) && (mouseX < (xpos+len+diameter/2))) {
+    if(mousePressed && (mouseY > (ypos-diameter/2)) && (mouseY < (ypos+diameter/2)) && (mouseX > (xpos-diameter/2)) && (mouseX < (xpos+len+diameter/2))) {
       isDragged = true;
     }
+    
+    //Keyboard Controls
+    if ((keyPressed == true) && (key == keyMinus)) {value--;}
+    if ((keyPressed == true) && (key == keyPlus))  {value++;}
   }
   
   void drawMe() {
@@ -253,7 +177,7 @@ class ControlSlider {
     strokeWeight(1);
     fill(255);
     textAlign(LEFT, BOTTOM);
-    text(name,xpos,ypos-0.75*diameter);
+    text(name + " - " + keyMinus + " , " + keyPlus + " ",xpos,ypos-0.75*diameter);
     textAlign(LEFT, CENTER);
     text(int(value) + " " + unit,xpos+6+len,ypos-1);
     
@@ -284,6 +208,7 @@ class RadioButton {
   int valMin;
   int valMax;
   boolean value;
+  boolean DEFAULT_VALUE;
   
   RadioButton() {
     xpos = 0;
@@ -297,7 +222,7 @@ class RadioButton {
   void listen() {
     
     // Mouse Controls
-    if((mouseY > (ypos-diameter/2)) && (mouseY < (ypos+diameter/2)) && (mouseX > xpos) && (mouseX < xpos+diameter)) {
+    if(mousePressed && (mouseY > (ypos-diameter)) && (mouseY < (ypos)) && (mouseX > xpos) && (mouseX < xpos+diameter)) {
       value = !value;
     }
     
@@ -307,17 +232,19 @@ class RadioButton {
   
   void drawMe() {
     
+    pushMatrix(); translate(0, -0.5*diameter, 0);
+    
     // Button Info
     strokeWeight(1);
     if (value) { fill(255); }
     else       { fill(150); } 
     textAlign(LEFT, CENTER);
-    text(name,xpos + 1.5*diameter,ypos);
+    text(name + " [" + keyToggle + "]",xpos + 1.5*diameter,ypos);
     
     // Button Holder
-    noFill();
-    stroke(100);
-    strokeWeight(3);
+    noStroke(); fill(50);
+    ellipse(xpos+0.5*diameter+1,ypos+1,diameter,diameter);
+    fill(100);
     ellipse(xpos+0.5*diameter,ypos,diameter,diameter);
     
     // Button Circle
@@ -325,5 +252,7 @@ class RadioButton {
     if (value) { fill(col); } 
     else       { fill( 0 ); } 
     ellipse(xpos+0.5*diameter,ypos,0.7*diameter,0.7*diameter);
+    
+    popMatrix();
   }
 }

@@ -60,7 +60,6 @@ class Camera {
   int MOVE_TIMER = 120;
   int moveTimer = 120;
   
-  
   // UI: Chunks used for selecting area in 3D
   //
   int CHUNK_RESOLUTION = 20; // length of chunk units
@@ -152,8 +151,8 @@ class Camera {
   // resets and centers camera view
   //
   void reset() {
-    hs.newspos = hs.xpos              + (hs.swidth-hs.sheight) * (ROTATION_DEFAULT) / (2*PI);
-    vs.newspos = vs.ypos + vs.sheight - (vs.sheight-vs.swidth) * (ZOOM_DEFAULT)     / (ZOOM_MIN-ZOOM_MAX);
+    hs.newspos = hs.sposMin + (hs.sposMax - hs.sposMin) * (ROTATION_DEFAULT)      / (2*PI);
+    vs.newspos = vs.sposMax - (vs.sposMax - vs.sposMin) * (ZOOM_DEFAULT-ZOOM_MAX) / (ZOOM_MIN-ZOOM_MAX);
     drag.x_offset = 0;
     drag.y_offset = 0;
     drag.camX_init = X_DEFAULT;
@@ -426,7 +425,7 @@ class VScrollbar {
   float getPosZoom(float MIN_VAL, float MAX_VAL) {
     // Convert spos to be values between
     // 0 and 2PI
-    return MIN_VAL + (MAX_VAL - MIN_VAL) * spos / sheight;
+    return (MIN_VAL - (MIN_VAL - MAX_VAL) * (spos-sposMin) / (sposMax-sposMin));
   }
 }
 

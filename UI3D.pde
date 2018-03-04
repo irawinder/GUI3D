@@ -7,7 +7,7 @@
 // Camera Object with built-in GUI for navigation and selection
 //
 Camera cam;
-PVector B = new PVector(6000, 6000, 0); // Bounding Box for 3D Environment
+PVector B = new PVector(3000, 3000, 0); // Bounding Box for 3D Environment
 int MARGIN = 25; // Pixel margin allowed around edge of screen
 
 // Semi-transparent Toolbar for information and sliders
@@ -36,21 +36,35 @@ void setup() {
   bar_left.credit = "(Left-hand Toolbar)";
   bar_left.explanation = "Use these scripts as the framework for an explorable 3D model parameterized with sliders, radio buttons, and 3d Object Placement.";
   bar_left.explanation += "\n\nPress ' d ' to reset all inputs\nPress ' p ' to print camera to cons.";
+  bar_left.controlY = BAR_Y + 250;
+  bar_left.addSlider("Slider A", "%", 0, 100, 25, 'q', 'w');
+  bar_left.addSlider("Slider B", "%", 0, 100, 50, 'a', 's');
+  bar_left.addSlider("Slider C", "%", 0, 100, 75, 'z', 'x');
+  bar_left.addButton("Button A", true, '1');
+  bar_left.addButton("Button B", false,'2');
+  bar_left.addButton("Button C", true, '3');
   
   // Right Toolbar
   bar_right = new Toolbar(width - (BAR_X + BAR_W), BAR_Y, BAR_W, BAR_H, MARGIN);
   bar_right.title = "Analysis";
   bar_right.credit = "(Right-hand Toolbar)";
-  bar_right.explanation = "Add outputs and summary data here.";
+  bar_right.explanation = "Add outputs, summary data, or ore inputs here.";
+  bar_right.controlY = BAR_Y + 150;
+  bar_right.addSlider("Slider D", "kg", 50, 100, 72, '<', '>');
+  bar_right.addButton("Button D", true, '4');
+  bar_right.addButton("Button E", false,'5');
+  bar_right.addButton("Button F", true, '6');
+  bar_right.addButton("Button G", true, '7');
   
   // Initialize 3D World Camera Defaults
   cam = new Camera (B, MARGIN);
   // eX, eW (extentsX ...) prevents accidental dragging when interactiong with toolbar
   cam.eX = MARGIN + BAR_W;
   cam.eW = width - 2*(BAR_W + MARGIN);
-  cam.ZOOM_DEFAULT = 0.3;
-  cam.ZOOM_POW = 1.75;
-  cam.ZOOM_MAX = 0.1;
+  cam.ZOOM_DEFAULT = 0.25;
+  cam.ZOOM_POW     = 1.75;
+  cam.ZOOM_MAX     = 0.10;
+  cam.ZOOM_MIN     = 0.75;
   cam.ROTATION_DEFAULT = PI; // (0 - 2*PI)
   cam.init(); //Must End with init() if any variables within Camera() are changed from default
   
