@@ -33,7 +33,7 @@ class Toolbar {
   }
   
   void addSlider(String name, String unit, int valMin, int valMax, float DEFAULT_VALUE, char keyMinus, char keyPlus) {
-    int num = sliders.size() + buttons.size() + 6*tSliders.size();
+    float num = sliders.size() + buttons.size() + 6*tSliders.size();
     ControlSlider s;
     s = new ControlSlider();
     s.name = name;
@@ -41,7 +41,7 @@ class Toolbar {
     s.keyPlus = keyPlus;
     s.keyMinus = keyMinus;
     s.xpos = barX + margin;
-    s.ypos = controlY + num*V_OFFSET;
+    s.ypos = controlY + int(num*V_OFFSET);
     s.len = contentW - margin;
     s.valMin = valMin;
     s.valMax = valMax;
@@ -51,20 +51,20 @@ class Toolbar {
   }
   
   void addButton(String name, boolean DEFAULT_VALUE, char keyToggle) {
-    int num = sliders.size() + buttons.size() + 6*tSliders.size();
+    float num = sliders.size() + buttons.size() + 6*tSliders.size();
     RadioButton b;
     b = new RadioButton();
     b.name = name;
     b.keyToggle = keyToggle;
     b.xpos = barX + margin;
-    b.ypos = controlY + num*V_OFFSET;
+    b.ypos = controlY + int(num*V_OFFSET);
     b.DEFAULT_VALUE = DEFAULT_VALUE;
     b.value = b.DEFAULT_VALUE;
     buttons.add(b);
   }
   
   void addTriSlider(String name, String name1, int col1, String name2, int col2, String name3, int col3) {
-    int num = sliders.size() + buttons.size() + 6*tSliders.size();
+    float num = sliders.size() + buttons.size() + 6*tSliders.size();
     TriSlider t;
     t = new TriSlider();
     t.name = name;
@@ -75,13 +75,13 @@ class Toolbar {
     t.name3 = name3;
     t.col3 = col3;
     t.xpos = barX + margin;
-    t.ypos = controlY + num*V_OFFSET;
+    t.ypos = controlY + int(num*V_OFFSET);
     t.corner1.x = barX + 0.50*barW;
     t.corner1.y = controlY + (num+0.20)*V_OFFSET;
-    t.corner2.x = barX + 0.3*barW;
-    t.corner2.y = controlY + (num+2.70)*V_OFFSET;
-    t.corner3.x = barX + 0.7*barW;
-    t.corner3.y = controlY + (num+2.70)*V_OFFSET;
+    t.corner2.x = barX + 0.33*barW;
+    t.corner2.y = controlY + (num+2.40)*V_OFFSET;
+    t.corner3.x = barX + 0.67*barW;
+    t.corner3.y = controlY + (num+2.40)*V_OFFSET;
     t.avgX = (t.corner1.x+t.corner2.x+t.corner3.x)/3.0;
     t.avgY = (t.corner1.y+t.corner2.y+t.corner3.y)/3.0;
     t.avg = new PVector(t.avgX, t.avgY);

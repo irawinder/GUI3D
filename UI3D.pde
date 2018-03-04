@@ -34,30 +34,49 @@ void setup() {
   bar_left = new Toolbar(BAR_X, BAR_Y, BAR_W, BAR_H, MARGIN);
   bar_left.title = "UI3D Visualization Template";
   bar_left.credit = "(Left-hand Toolbar)";
-  bar_left.explanation = "Use these scripts as the framework for an explorable 3D model parameterized with sliders, radio buttons, and 3d Object Placement.";
-  bar_left.explanation += "\n\nPress ' d ' to reset all inputs\nPress ' p ' to print camera to cons.";
-  bar_left.controlY = BAR_Y + 250;
+  bar_left.explanation = "";
+  bar_left.controlY = BAR_Y + 100;
   bar_left.addSlider("Slider A", "%", 0, 100, 25, 'q', 'w');
   bar_left.addSlider("Slider B", "%", 0, 100, 50, 'a', 's');
+  bar_left.addSlider("SPACER",   "%", 0, 100, 50, 'a', 's');
   bar_left.addSlider("Slider C", "%", 0, 100, 75, 'z', 'x');
-  bar_left.addButton("Button A", true, '1');
-  bar_left.addButton("Button B", false,'2');
-  bar_left.addButton("Button C", true, '3');
+  bar_left.addSlider("Slider D", "%", 0, 100, 25, 'i', 'o');
+  bar_left.addSlider("SPACER",   "%", 0, 100, 50, 'a', 's');
+  bar_left.addSlider("Slider E", "%", 0, 100, 50, 'k', 'l');
+  bar_left.addSlider("Slider F", "%", 0, 100, 75, ',', '.');
+  bar_left.addSlider("SPACER",   "%", 0, 100, 50, 'a', 's');
   bar_left.addTriSlider("TriSlider", "value1", #FF00FF, "value2", #FFFF00, "value3", #00FFFF);
-  bar_left.addButton("Button Z", true, '4');
-  bar_left.addButton("Button Y", true, '5');
+  bar_left.addButton("Item A", true, '1');
+  bar_left.addButton("Item B", true, '2');
+  bar_left.addButton("Item C", true, '3');
+  bar_left.addButton("Item D", true, '4');
+  bar_left.addButton("Item W", true, '1');
+  bar_left.addButton("Item X", true, '2');
+  bar_left.addButton("Item Y", true, '3');
+  bar_left.addButton("Item Z", true, '4');
+  for (int i=0; i<4; i++) {
+    bar_left.buttons.get(i+4).xpos = bar_left.barX + bar_left.barW/2; 
+    bar_left.buttons.get(i+4).ypos = bar_left.buttons.get(i).ypos;
+  }
+  // Delete Spacers
+  bar_left.sliders.remove(8);
+  bar_left.sliders.remove(5);
+  bar_left.sliders.remove(2);
+  
   
   // Right Toolbar
   bar_right = new Toolbar(width - (BAR_X + BAR_W), BAR_Y, BAR_W, BAR_H, MARGIN);
   bar_right.title = "Analysis";
   bar_right.credit = "(Right-hand Toolbar)";
-  bar_right.explanation = "Add outputs, summary data, or ore inputs here.";
-  bar_right.controlY = BAR_Y + 150;
-  bar_right.addSlider("Slider D", "kg", 50, 100, 72, '<', '>');
-  bar_right.addButton("Button D", true, '6');
-  bar_right.addButton("Button E", false,'7');
-  bar_right.addButton("Button F", true, '8');
-  bar_right.addButton("Button G", true, '9');
+  bar_right.explanation = "Framework for explorable 3D model parameterized with sliders, radio buttons, and 3D Cursor.";
+  bar_right.explanation += "\n\nAdd outputs, summary data, or ore inputs here.";
+  bar_right.explanation += "\n\nPress ' d ' to reset all inputs\nPress ' p ' to print camera settings";
+  bar_right.controlY = BAR_Y + 250;
+  bar_right.addSlider("Slider E", "kg", 50, 100, 72, '<', '>');
+  bar_right.addButton("Button D", true, '5');
+  bar_right.addButton("Button E", false,'6');
+  bar_right.addButton("Button F", true, '7');
+  bar_right.addButton("Button G", true, '8');
   
   // Initialize 3D World Camera Defaults
   cam = new Camera (B, MARGIN);
