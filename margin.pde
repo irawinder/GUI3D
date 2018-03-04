@@ -1,4 +1,4 @@
-int controlOffset = 250;
+int controlOffset = 300;
   
 class Toolbar {
   int barWidth;
