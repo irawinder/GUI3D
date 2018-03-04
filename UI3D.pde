@@ -71,12 +71,23 @@ void setup() {
   bar_right.explanation = "Framework for explorable 3D model parameterized with sliders, radio buttons, and 3D Cursor.";
   bar_right.explanation += "\n\nAdd outputs, summary data, or ore inputs here.";
   bar_right.explanation += "\n\nPress ' d ' to reset all inputs\nPress ' p ' to print camera settings";
-  bar_right.controlY = BAR_Y + 250;
-  bar_right.addSlider("Slider E", "kg", 50, 100, 72, '<', '>');
+  bar_right.controlY = BAR_Y + 230;
   bar_right.addButton("Button D", true, '5');
   bar_right.addButton("Button E", false,'6');
   bar_right.addButton("Button F", true, '7');
   bar_right.addButton("Button G", true, '8');
+  bar_right.addButton("Button H", true, '9');
+  bar_right.addSlider("SPACER", "kg", 50, 100, 72, '<', '>');
+  bar_right.addSlider("Slider 1", "kg", 50, 100, 72, '<', '>');
+  bar_right.addSlider("Slider 2", "kg", 50, 100, 72, '<', '>');
+  bar_right.addSlider("Slider 3", "kg", 50, 100, 72, '<', '>');
+  bar_right.addSlider("Slider 4", "kg", 50, 100, 72, '<', '>');
+  bar_right.addSlider("Slider 5", "kg", 50, 100, 72, '<', '>');
+  bar_right.addSlider("Slider 6", "kg", 50, 100, 72, '<', '>');
+  bar_right.addSlider("Slider 7", "kg", 50, 100, 72, '<', '>');
+  bar_right.addSlider("Slider 8", "kg", 50, 100, 72, '<', '>');
+  bar_right.addSlider("Slider 9", "kg", 50, 100, 72, '<', '>');
+  bar_right.sliders.remove(0);
   
   // Initialize 3D World Camera Defaults
   cam = new Camera (B, MARGIN);
