@@ -3,7 +3,7 @@ Class and Implementation for Displaying and Navigating 3D Environment in Process
 UI3D has ready-made UI, Sliders, Radio Buttons, I/O, and smooth camera transitions.
 
 ## How To Use
-Clone the repository and open "Denizim.pde" using [Processing 3](https://processing.org/download/).
+Clone the repository and open "UI3D.pde" using [Processing 3](https://processing.org/download/).
 
 ![alt text](/screenshots/Screen%20Shot%202018-03-04%20at%204.15.03%20AM.png "UI3D")
 
