@@ -410,7 +410,7 @@ class TriSlider {
     // Update Values
     float dist1, dist2, dist3;
     float pow = 3;
-    float maxDist = 1.45*r;
+    float maxDist = 1.60*r;
     if (pt.dist(corner1) > maxDist) {
       dist1 = 0;
     } else {
