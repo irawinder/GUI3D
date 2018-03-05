@@ -1,11 +1,11 @@
-# UI3D
+# GUI3D
 Class and Implementation for Displaying and Navigating 3D Environment in Processing 3.  
-UI3D has ready-made UI, Sliders, Radio Buttons, I/O, and smooth camera transitions.
+GUI3D has ready-made UI, Sliders, Radio Buttons, I/O, and smooth camera transitions.
 
 ## How To Use
-Clone the repository and open "UI3D.pde" using [Processing 3](https://processing.org/download/).
+Clone the repository and open "GUI3D.pde" using [Processing 3](https://processing.org/download/).
 
-![alt text](/screenshots/Screen%20Shot%202018-03-04%20at%204.15.03%20AM.png "UI3D")
+![alt text](/screenshots/Screen%20Shot%202018-03-04%20at%204.15.03%20AM.png "GUI3D")
 
 ## 
 Classes Contained
