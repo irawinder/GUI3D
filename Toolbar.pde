@@ -198,11 +198,8 @@ class ControlSlider {
   }
   
   void update() {
-    if (isDragged) {
-      value = (mouseX-xpos)*(valMax-valMin)/len+valMin;
-    }
-    if(value < valMin) value = valMin;
-    if(value > valMax) value = valMax;
+    if (isDragged) value = (mouseX-xpos)*(valMax-valMin)/len+valMin;
+    checkLimit();
   }
   
   void listen() {
@@ -213,6 +210,12 @@ class ControlSlider {
     //Keyboard Controls
     if ((keyPressed == true) && (key == keyMinus)) {value--;}
     if ((keyPressed == true) && (key == keyPlus))  {value++;}
+    checkLimit();
+  }
+  
+  void checkLimit() {
+    if(value < valMin) value = valMin;
+    if(value > valMax) value = valMax;
   }
   
   void drawMe() {
