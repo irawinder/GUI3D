@@ -33,8 +33,8 @@ class Toolbar {
   int barX, barY, barW, barH; // X, Y, Width, and Height of Toolbar on Screen
   int contentW, contentH;     // pixel width and height of toolbar content accounting for margin
   int margin;                 // standard internal pixel buffer distance from edge of canvas
-  int CONTROL_H = 35;          // standard vertical pixel distance between control elements
-  int controlY;          // vertical position where controls begin
+  int CONTROL_H = 35;         // standard vertical pixel distance between control elements
+  int controlY;               // vertical position where controls begin
   
   String title, credit, explanation;
   ArrayList<ControlSlider> sliders;
