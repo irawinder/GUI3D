@@ -3,7 +3,7 @@
  *
  *  This class and associated sliders, radio buttons, and specialized 
  *  input are generalizable for parameterized models. For a generic 
- *  implementation check out the repo at: http://github.com/irawinder/UI3D
+ *  implementation check out the repo at: http://github.com/irawinder/GUI3D
  *  
  *  CLASSES CONTAINED:
  *

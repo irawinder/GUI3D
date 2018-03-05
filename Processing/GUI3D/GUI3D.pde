@@ -1,9 +1,10 @@
-/*  CAMERA ALGORITHMS
+/*  GUI3D ALGORITHMS
  *  Ira Winder, ira@mit.edu, 2018
  *
- *  This script demonstrates the implementation of a "Camera" class that has ready-made
- *  UI, Sliders, Radio Buttons, I/O, and smooth camera transitions. For a generic 
- *  implementation check out the repo at: http://github.com/irawinder/UI3D
+ *  These script demonstrates the implementation of a Camera() and Toolbar() 
+ *  classes that has ready-made UI, Sliders, Radio Buttons, I/O, and smooth camera 
+ *  transitions. For a generic implementation check out the repo at: 
+ *  http://github.com/irawinder/GUI3D
  *
  *  CLASSES CONTAINED:
  *
@@ -65,7 +66,7 @@ void setup() {
   
   // Left Toolbar
   bar_left = new Toolbar(BAR_X, BAR_Y, BAR_W, BAR_H, MARGIN);
-  bar_left.title = "UI3D Visualization Template";
+  bar_left.title = "GUI3D Visualization Template";
   bar_left.credit = "(Left-hand Toolbar)";
   bar_left.explanation = "";
   bar_left.controlY = BAR_Y + bar_left.margin + 2*bar_left.CONTROL_H;
