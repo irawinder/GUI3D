@@ -1,8 +1,9 @@
 /*  CAMERA ALGORITHMS
  *  Ira Winder, ira@mit.edu, 2018
  *
- *  This script demonstrates the implementation of a "Camera" class that has ready-made UI, 
- *  Sliders, Radio Buttons, I/O, and smooth camera transitions.
+ *  This script demonstrates the implementation of a "Camera" class that has ready-made
+ *  UI, Sliders, Radio Buttons, I/O, and smooth camera transitions. For a generic 
+ *  implementation check out the repo at: http://github.com/irawinder/UI3D
  *
  *  CLASSES CONTAINED:
  *
@@ -64,6 +65,7 @@ class Camera {
   
   // UI: Chunks used for selecting area in 3D
   //
+  boolean enableChunks;
   ChunkGrid chunkField;
   
   // UI: Active UI Input
@@ -116,6 +118,9 @@ class Camera {
     eY = 0;
     eW = width;
     eH = height;
+    
+    // Allow 3D mouse cursor object to select chunks
+    enableChunks = true;
     
     init();
   }
@@ -195,7 +200,7 @@ class Camera {
     fadeTimer = FADE_TIMER;
     orient();
     if (chunkTimer <= 0) {
-      if (!mousePressed) chunkField.checkChunks(mouseX, mouseY);
+      if (!mousePressed && enableChunks) chunkField.checkChunks(mouseX, mouseY);
       chunkTimer = CHUNK_TIMER;
     }  else {
       chunkTimer--;
@@ -280,7 +285,7 @@ class Camera {
     pushMatrix(); translate(width/2, margin);
     fill(LINE_COLOR, 255-BASE_ALPHA);
     textAlign(CENTER, TOP);
-    text("Press 'r' to reset camera position", 0, 0);
+    text("Press 'c' for default camera position", 0, 0);
     if (showFrameRate) text("(F)ramerate: " + int(frameRate*10)/10.0, 0, 32);
     popMatrix();
     

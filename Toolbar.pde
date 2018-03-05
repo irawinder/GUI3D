@@ -2,7 +2,8 @@
  *  Ira Winder, ira@mit.edu, 2018
  *
  *  This class and associated sliders, radio buttons, and specialized 
- *  input are generalizable for parameterized models
+ *  input are generalizable for parameterized models. For a generic 
+ *  implementation check out the repo at: http://github.com/irawinder/UI3D
  *  
  *  CLASSES CONTAINED:
  *
