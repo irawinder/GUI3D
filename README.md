@@ -1,5 +1,5 @@
 # GUI3D
-Class and Implementation for Displaying and Navigating 3D Environment in Processing 3.  
+Classes and Implementation for displaying, navigating, and manipulating a 3D Simulation in Processing 3.  
 GUI3D has ready-made UI, Sliders, Radio Buttons, I/O, and smooth camera transitions.
 
 ## How To Use
