@@ -130,7 +130,7 @@ class Toolbar {
   void restoreDefault() {
     if (sliders.size()  > 0) for (ControlSlider s: sliders ) s.value = s.DEFAULT_VALUE;
     if (buttons.size()  > 0) for (RadioButton   b: buttons ) b.value = b.DEFAULT_VALUE;
-    if (tSliders.size() > 0) for (TriSlider     t: tSliders) t.pt    = new PVector(t.avgX, t.avgY);
+    if (tSliders.size() > 0) for (TriSlider     t: tSliders) t.useDefault();
   }
   
   // Draw Margin Elements
@@ -375,6 +375,11 @@ class TriSlider {
     value1 = 0.1;
     value2 = 0.2;
     value3 = 0.7;
+  }
+  
+  void useDefault() {
+    pt = new PVector(avg.x, avg.y);
+    calculateValues();
   }
   
   void listen() {
