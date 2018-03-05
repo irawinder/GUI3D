@@ -63,6 +63,8 @@ class Camera {
   // UI: Chunks used for selecting area in 3D
   //
   int CHUNK_RESOLUTION = 20; // length of chunk units
+  int CHUNK_TIMER = 5; // Amounts of ticks between chunk detection
+  int chunkTimer  = 5;
   
   // UI: Show Frame Rate
   //
@@ -164,7 +166,12 @@ class Camera {
     uiFade = 1.0;
     fadeTimer = FADE_TIMER;
     orient();
-    if (!mousePressed) chunkField.checkChunks(mouseX, mouseY);
+    if (chunkTimer <= 0) {
+      if (!mousePressed) chunkField.checkChunks(mouseX, mouseY);
+      chunkTimer = CHUNK_TIMER;
+    }  else {
+      chunkTimer--;
+    }
     if (moveTimer > 0) moveTimer--;
   }
   
