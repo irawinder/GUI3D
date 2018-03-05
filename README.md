@@ -5,7 +5,7 @@ GUI3D has ready-made UI, Sliders, Radio Buttons, I/O, and smooth camera transiti
 ## How To Use
 Clone the repository and open "GUI3D.pde" using [Processing 3](https://processing.org/download/).
 
-![alt text](/screenshots/Screen%20Shot%202018-03-04%20at%204.15.03%20AM.png "GUI3D")
+![alt text](/screenshots/GUI3D.png "GUI3D")
 
 ## 
 Classes Contained
