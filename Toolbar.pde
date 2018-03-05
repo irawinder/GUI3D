@@ -226,7 +226,7 @@ class ControlSlider {
   }
   
   void listen() {
-    if(mousePressed && (mouseY > (ypos-diameter/2)) && (mouseY < (ypos+diameter/2)) && (mouseX > (xpos-diameter/2)) && (mouseX < (xpos+len+diameter/2))) {
+    if(mousePressed && hover() ) {
       isDragged = true;
     }
     
@@ -239,6 +239,15 @@ class ControlSlider {
   void checkLimit() {
     if(value < valMin) value = valMin;
     if(value > valMax) value = valMax;
+  }
+  
+  boolean hover() {
+    if( mouseY > (ypos-diameter/2) && mouseY < (ypos+diameter/2) && 
+        mouseX > (xpos-diameter/2) && mouseX < (xpos+len+diameter/2) ) {
+      return true;
+    } else {
+      return false;
+    }
   }
   
   void drawMe() {
@@ -264,6 +273,7 @@ class ControlSlider {
     // Slider Circle
     noStroke();
     fill(200);
+    if ( hover() ) fill(255);
     ellipse(xpos+0.5*diameter+(len-1.0*diameter)*(value-valMin)/(valMax-valMin),ypos,diameter,diameter);
   }
 }
@@ -292,12 +302,21 @@ class RadioButton {
   void listen() {
     
     // Mouse Controls
-    if(mousePressed && (mouseY > (ypos-diameter)) && (mouseY < (ypos)) && (mouseX > xpos) && (mouseX < xpos+diameter)) {
+    if( mousePressed && hover() ) {
       value = !value;
     }
     
     // Keyboard Controls
     if ((keyPressed == true) && (key == keyToggle)) {value = !value;}
+  }
+  
+  boolean hover() {
+    if( mouseY > ypos-diameter && mouseY < ypos && 
+        mouseX > xpos          && mouseX < xpos+diameter ) {
+      return true;
+    } else {
+      return false;
+    }
   }
   
   void drawMe() {
@@ -319,8 +338,10 @@ class RadioButton {
     
     // Button Circle
     noStroke();
-    if (value) { fill(col); } 
-    else       { fill( 0 ); } 
+    int alpha = 200;
+    if ( hover() ) alpha = 255;
+    if (value) { fill(col, alpha); } 
+    else       { fill( 0 , alpha); } 
     ellipse(xpos+0.5*diameter,ypos,0.7*diameter,0.7*diameter);
     
     popMatrix();
@@ -379,6 +400,11 @@ class TriSlider {
     }
   }
   
+  boolean hover() {
+    PVector mouse = new PVector(mouseX, mouseY);
+    return mouse.dist(avg) < r;
+  }
+  
   void calculateValues() {
     // Update Values
     float dist1, dist2, dist3;
@@ -426,11 +452,13 @@ class TriSlider {
     
     // Draw Cursor
     //
-    fill(255);
+    fill(200);
+    if( hover() ) fill(255);
     ellipse(pt.x, pt.y, diameter, diameter);
     
     // Draw Element Meta Information
     //
+    fill(255);
     textAlign(LEFT, TOP);
     text(name, xpos, ypos-16);
     textAlign(CENTER, CENTER); fill(col1);
