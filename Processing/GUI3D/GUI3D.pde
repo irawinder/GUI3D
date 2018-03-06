@@ -51,6 +51,7 @@ int BAR_X, BAR_Y, BAR_W, BAR_H;
 
 PVector objectLocation; // Location of an Object a user can move with arrow keys
 ArrayList<PVector> additions; // Locations of objects user can place with mouse
+boolean placeAdditions;
 
 // Initiatizes program on startup
 //
@@ -84,10 +85,10 @@ void setup() {
   bar_left.addButton("Item B", 200, true, '2');
   bar_left.addButton("Item C", 200, true, '3');
   bar_left.addButton("Item D", 200, true, '4');
-  bar_left.addButton("Item W", 200, true, '1');
-  bar_left.addButton("Item X", 200, true, '2');
-  bar_left.addButton("Item Y", 200, true, '3');
-  bar_left.addButton("Item Z", 200, true, '4');
+  bar_left.addButton("Item W", 200, true, '5');
+  bar_left.addButton("Item X", 200, true, '6');
+  bar_left.addButton("Item Y", 200, true, '7');
+  bar_left.addButton("Item Z", 200, true, '8');
   for (int i=0; i<4; i++) {
     bar_left.buttons.get(i+4).xpos = bar_left.barX + bar_left.barW/2; 
     bar_left.buttons.get(i+4).ypos = bar_left.buttons.get(i).ypos;
@@ -102,15 +103,15 @@ void setup() {
   bar_right = new Toolbar(width - (BAR_X + BAR_W), BAR_Y, BAR_W, BAR_H, MARGIN);
   bar_right.title = "Analysis";
   bar_right.credit = "(Right-hand Toolbar)";
-  bar_right.explanation = "Framework for explorable 3D model parameterized with sliders, radio buttons, and 3D Cursor.";
-  bar_right.explanation += "\n\nAdd outputs, summary data, or ore inputs here.";
-  bar_right.explanation += "\n\nPress ' d ' to reset all inputs\nPress ' p ' to print camera settings";
+  bar_right.explanation = "Framework for explorable 3D model parameterized with sliders, radio buttons, and 3D Cursor. ";
+  bar_right.explanation += "Add outputs, summary data, or ore inputs here.";
+  bar_right.explanation += "\n\nPress ' r ' to reset all inputs\nPress ' p ' to print camera settings\nPress ' a ' to add add objects";
   bar_right.controlY = BAR_Y + bar_left.margin + 6*bar_left.CONTROL_H;
-  bar_right.addButton("Button D", 200, true, '5');
-  bar_right.addButton("Button E", 200, false,'6');
-  bar_right.addButton("Button F", 200, true, '7');
-  bar_right.addButton("Button G", 200, true, '8');
-  bar_right.addButton("Button H", 200, true, '9');
+  bar_right.addButton("Button A", 200, true, '!');
+  bar_right.addButton("Button B", 200, true,'@');
+  bar_right.addButton("Button C", 200, true, '#');
+  bar_right.addButton("Button D", 200, true, '$');
+  bar_right.addButton("Button E", 200, true, '%');
   bar_right.addSlider("SPACER", "kg", 50, 100, 72, '<', '>');
   bar_right.addSlider("Slider 1", "kg", 50, 100, 72, '<', '>');
   bar_right.addSlider("Slider 2", "kg", 50, 100, 72, '<', '>');
@@ -138,6 +139,7 @@ void setup() {
   // Sample 3D objects to manipulate
   objectLocation = new PVector(B.x/2, B.y/2, 0);
   additions = new ArrayList<PVector>();
+  placeAdditions = true;
 }
 
 // Runs once every frame of application
@@ -197,7 +199,7 @@ void draw() {
   // Click-Object: Draw Selection Cursor
   float cursorX = 0;
   float cursorY = 0;
-  if (cam.enableChunks) {
+  if (cam.enableChunks && placeAdditions) {
     //cam.chunkField.drawCursor();
     if (cam.chunkField.closestFound) {
       Chunk c = cam.chunkField.closest;
@@ -222,7 +224,7 @@ void draw() {
   camera(); noLights(); perspective(); 
   
   // Diameter of Cursor Objects
-  float diam = min(100, 5/pow(cam.zoom, 2));
+  float diam = min(225, 5/pow(cam.zoom, 2));
   
   // Arrow-Object: Draw Cursor Ellipse and Text
   noFill(); stroke(#FFFF00, 200);
@@ -230,7 +232,7 @@ void draw() {
   fill(#FFFF00, 200); textAlign(LEFT, CENTER);
   text("OBJECT: Move with Arrow Keys", s_x + 0.6*diam, s_y);
   
-  if (cam.enableChunks) {
+  if (cam.enableChunks && placeAdditions) {
     // Click-Object: Draw Cursor Text
     if (cam.chunkField.closestFound) {
       fill(#00FF00, 200); textAlign(LEFT, CENTER);
@@ -280,10 +282,10 @@ void keyPressed() {
     case 'f':
       cam.showFrameRate = !cam.showFrameRate;
       break;
-    case 'r':
+    case 'c':
       cam.reset();
       break;
-    case 'd':
+    case 'r':
       additions.clear();
       bar_left.restoreDefault();
       bar_right.restoreDefault();
@@ -293,6 +295,9 @@ void keyPressed() {
       println("cam.offset.x = " + cam.offset.x);
       println("cam.zoom = "     + cam.zoom);
       println("cam.rotation = " + cam.rotation);
+      break;
+    case 'a':
+      placeAdditions = !placeAdditions;
       break;
     case '-':
       objectLocation.z -= 20;
