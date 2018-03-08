@@ -132,10 +132,10 @@ class Camera {
     int thirdPix  = int(0.3*height);
     
     // Initialize Horizontal Scrollbar
-    hs = new HScrollbar(width/2 - thirdPix/2, height - 1.5*margin, thirdPix, margin, 5);
+    hs = new HScrollbar(width/2 - thirdPix/2, height - 1.5*margin, thirdPix, margin, 15);
     
     // Initialize Vertical Scrollbar
-    vs = new VScrollbar(eX + eW - int(1.5*margin), margin, margin, thirdPix, 5);
+    vs = new VScrollbar(eX + eW - int(1.5*margin), margin, margin, thirdPix, 15);
     
     // Initialize Drag Funciton
     drag = new XYDrag(1.0, 7, eX, eY, eW, eH);
@@ -403,7 +403,7 @@ class VScrollbar {
     ratio = sh / heighttowidth;
     xpos = xp-swidth/2;
     ypos = yp;
-    spos = sheight/2;
+    spos = ypos;
     newspos = spos;
     sposMin = ypos;
     sposMax = ypos + sheight - swidth;
