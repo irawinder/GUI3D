@@ -63,7 +63,7 @@ void setup() {
   BAR_X = MARGIN;
   BAR_Y = MARGIN;
   BAR_W = 250;
-  BAR_H = height - 2*MARGIN;
+  BAR_H = 800 - 2*MARGIN;
   
   // Left Toolbar
   bar_left = new Toolbar(BAR_X, BAR_Y, BAR_W, BAR_H, MARGIN);
