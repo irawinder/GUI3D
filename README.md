@@ -2,7 +2,10 @@
 Generic implementation of classes for displaying, navigating, and manipulating a 3D Simulation in Processing 3
 
 ## How To Use
-Clone the repository and open "GUI3D.pde" using [Processing 3](https://processing.org/download/).
+1. Make sure you have installed the latest version of [Java](https://www.java.com/verify/)
+2. Download [Processing 3](https://processing.org/download/)
+3. Clone or download the repository to your computer
+4. Open "Processing/GUI3D/GUI3D.pde" with Processing 3
 
 ![alt text](/screenshots/GUI3D.png "GUI3D")
 
