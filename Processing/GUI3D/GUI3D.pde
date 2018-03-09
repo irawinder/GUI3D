@@ -67,8 +67,8 @@ void setup() {
   
   // Left Toolbar
   bar_left = new Toolbar(BAR_X, BAR_Y, BAR_W, BAR_H, MARGIN);
-  bar_left.title = "GUI3D Visualization Template";
-  bar_left.credit = "(Left-hand Toolbar)";
+  bar_left.title = "GUI3D Visualization Template\n";
+  bar_left.credit = "(Left-hand Toolbar)\n\n";
   bar_left.explanation = "";
   bar_left.controlY = BAR_Y + bar_left.margin + 2*bar_left.CONTROL_H;
   bar_left.addSlider("Slider A", "%", 0, 100, 25, 'q', 'w');
@@ -101,8 +101,8 @@ void setup() {
   
   // Right Toolbar
   bar_right = new Toolbar(width - (BAR_X + BAR_W), BAR_Y, BAR_W, BAR_H, MARGIN);
-  bar_right.title = "Analysis";
-  bar_right.credit = "(Right-hand Toolbar)";
+  bar_right.title = "Analysis\n";
+  bar_right.credit = "(Right-hand Toolbar)\n\n";
   bar_right.explanation = "Framework for explorable 3D model parameterized with sliders, radio buttons, and 3D Cursor. ";
   bar_right.explanation += "Add outputs, summary data, or ore inputs here.";
   bar_right.explanation += "\n\nPress ' r ' to reset all inputs\nPress ' p ' to print camera settings\nPress ' a ' to add add objects";

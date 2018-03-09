@@ -160,7 +160,7 @@ class Toolbar {
     translate(margin, margin);
     textAlign(LEFT, TOP);
     fill(255);
-    text(title + "\n" + credit + "\n\n" + explanation, 0, 0, contentW, contentH);
+    text(title + credit + explanation, 0, 0, contentW, contentH);
     popMatrix();
     
     // Sliders
