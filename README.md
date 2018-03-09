@@ -5,7 +5,7 @@ Generic implementation of classes for displaying, navigating, and manipulating a
 1. Make sure you have installed the latest version of [Java](https://www.java.com/verify/)
 2. Download [Processing 3](https://processing.org/download/)
 3. Clone or download the repository to your computer
-4. Open "Processing/GUI3D/GUI3D.pde" with Processing 3
+4. Open and run "Processing/GUI3D/GUI3D.pde" with Processing 3
 
 ![alt text](/screenshots/GUI3D.png "GUI3D")
 
