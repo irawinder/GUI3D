@@ -153,7 +153,7 @@ void draw() {
   }
   
   // Draw and Calculate 3D Graphics 
-  cam.orient();
+  cam.on();
   
   // ****
   // NOTE: Objects draw earlier in the loop will obstruct 
@@ -220,8 +220,7 @@ void draw() {
   
   // -------------------------
   // Begin Drawing 2D Elements
-  hint(DISABLE_DEPTH_TEST);
-  camera(); noLights(); perspective(); 
+  cam.off();
   
   // Diameter of Cursor Objects
   float diam = min(225, 5/pow(cam.zoom, 2));
@@ -239,9 +238,6 @@ void draw() {
       text("Click to Place", cursorX + 0.3*diam, cursorY);
     }
   }
-  
-  hint(ENABLE_DEPTH_TEST);
-  
   
   // Draw Slider Bars for Controlling Zoom and Rotation (2D canvas begins)
   cam.drawControls();

@@ -2,8 +2,8 @@
  *  Ira Winder, ira@mit.edu, 2018
  *
  *  This script demonstrates the implementation of a "Camera" class that has ready-made
- *  UI and smooth camera transitions. For a generic 
- *  implementation check out the repo at: http://github.com/irawinder/GUI3D
+ *  UI, Sliders, Radio Buttons, I/O, and smooth camera transitions. For a generic 
+ *  implementation check out the repo at: http://github.com/irawinder/UI3D
  *
  *  CLASSES CONTAINED:
  *
@@ -132,10 +132,10 @@ class Camera {
     int thirdPix  = int(0.3*height);
     
     // Initialize Horizontal Scrollbar
-    hs = new HScrollbar(width/2 - thirdPix/2, height - 1.5*margin, thirdPix, margin, 15);
+    hs = new HScrollbar(width/2 - thirdPix/2, height - 1.5*margin, thirdPix, margin, 10);
     
     // Initialize Vertical Scrollbar
-    vs = new VScrollbar(eX + eW - int(1.5*margin), margin, margin, thirdPix, 15);
+    vs = new VScrollbar(eX + eW - int(1.5*margin), margin, margin, thirdPix, 10);
     
     // Initialize Drag Funciton
     drag = new XYDrag(1.0, 7, eX, eY, eW, eH);
@@ -150,7 +150,7 @@ class Camera {
   
   // Set Camera Position based upon current parameters
   //
-  void orient() {
+  void on() {
     float eyeX, eyeY, eyeZ, centerX, centerY, centerZ, upX, upY, upZ;
     
     // Camera Position
@@ -181,6 +181,14 @@ class Camera {
     translate(offset.x, offset.y, 0);
     
     update();
+    hint(ENABLE_DEPTH_TEST);
+  }
+  
+  // Turn camera off when drawing 2D UI components, for instance
+  //
+  void off() {
+    camera(); noLights(); perspective(); 
+    hint(DISABLE_DEPTH_TEST);
   }
   
   // resets and centers camera view
@@ -198,7 +206,7 @@ class Camera {
   void moved() {
     uiFade = 1.0;
     fadeTimer = FADE_TIMER;
-    orient();
+    on();
     if (chunkTimer <= 0) {
       if (!mousePressed && enableChunks) chunkField.checkChunks(mouseX, mouseY);
       chunkTimer = CHUNK_TIMER;
@@ -272,10 +280,7 @@ class Camera {
   // Renders the UI on a 2D canvas that writes over any 3D image
   //
   void drawControls() {
-    camera();
-    noLights();
-    perspective();
-    hint(DISABLE_DEPTH_TEST);
+    cam.off();
     
     // Draw Scroll Bars
     hs.display(LINE_COLOR, BASE_ALPHA);
@@ -294,8 +299,6 @@ class Camera {
     fill(LINE_COLOR, 255-2*BASE_ALPHA);
     text("Copyright 2018 Ira Winder", 0, 0);
     popMatrix();
-    
-    hint(ENABLE_DEPTH_TEST);
   }
 }
 
