@@ -1,7 +1,6 @@
 /*  TOOLBAR ALGORITHMS
  *  Ira Winder, ira@mit.edu, 2018
  *
- *  This class and associated sliders, radio buttons, and specialized 
  *  input are generalizable for parameterized models. For a generic 
  *  implementation check out the repo at: http://github.com/irawinder/GUI3D
  *  
@@ -56,7 +55,7 @@ class Toolbar {
     controlY = 8*CONTROL_H;
   }
   
-  void addSlider(String name, String unit, int valMin, int valMax, float DEFAULT_VALUE, char keyMinus, char keyPlus) {
+  void addSlider(String name, String unit, int valMin, int valMax, float DEFAULT_VALUE, char keyMinus, char keyPlus, boolean keyCommand) {
     float num = sliders.size() + buttons.size() + 6*tSliders.size();
     ControlSlider s;
     s = new ControlSlider();
@@ -64,6 +63,7 @@ class Toolbar {
     s.unit = unit;
     s.keyPlus = keyPlus;
     s.keyMinus = keyMinus;
+    s.keyCommand = keyCommand;
     s.xpos = barX + margin;
     s.ypos = controlY + int(num*CONTROL_H);
     s.len = contentW - margin;
@@ -136,11 +136,6 @@ class Toolbar {
   // Draw Margin Elements
   //
   void draw() {
-    camera();
-    noLights();
-    perspective();
-    hint(DISABLE_DEPTH_TEST);
-    
     pushMatrix();
     translate(barX, barY);
     
@@ -179,8 +174,6 @@ class Toolbar {
       t.update();
       t.drawMe();
     }
-    
-    hint(ENABLE_DEPTH_TEST);
   }
   
   boolean hover() {
@@ -202,6 +195,7 @@ class ControlSlider {
   int diameter;
   char keyMinus;
   char keyPlus;
+  boolean keyCommand;
   boolean isDragged;
   int valMin;
   int valMax;
@@ -215,6 +209,7 @@ class ControlSlider {
     diameter = 15;
     keyMinus = '-';
     keyPlus = '+';
+    keyCommand = true;
     isDragged = false;
     valMin = 0;
     valMax = 0;
@@ -232,9 +227,11 @@ class ControlSlider {
     }
     
     //Keyboard Controls
-    if ((keyPressed == true) && (key == keyMinus)) {value--;}
-    if ((keyPressed == true) && (key == keyPlus))  {value++;}
-    checkLimit();
+    if (keyCommand) {
+      if ((keyPressed == true) && (key == keyMinus)) {value--;}
+      if ((keyPressed == true) && (key == keyPlus))  {value++;}
+      checkLimit();
+    }
   }
   
   void checkLimit() {
@@ -257,9 +254,12 @@ class ControlSlider {
     strokeWeight(1);
     fill(255);
     textAlign(LEFT, BOTTOM);
-    text( "[" + keyMinus + "," + keyPlus + "] " + name,xpos,ypos-0.75*diameter);
+    String txt = "";
+    if (keyCommand) txt += "[" + keyMinus + "," + keyPlus + "] ";
+    txt += name;
+    text(txt, int(xpos), int(ypos-0.75*diameter) );
     textAlign(LEFT, CENTER);
-    text(int(value) + " " + unit,xpos+6+len,ypos-1);
+    text(int(value) + " " + unit,int(xpos+6+len), int(ypos-1) );
     
     // Slider Bar
     fill(100); noStroke();
@@ -329,7 +329,7 @@ class RadioButton {
     if (value) { fill(255); }
     else       { fill(150); } 
     textAlign(LEFT, CENTER);
-    text("[" + keyToggle + "] " + name,xpos + 1.5*diameter,ypos);
+    text("[" + keyToggle + "] " + name,int(xpos + 1.5*diameter),int(ypos) );
     
     // Button Holder
     noStroke(); fill(50);
@@ -466,21 +466,21 @@ class TriSlider {
     //
     fill(255);
     textAlign(LEFT, TOP);
-    text(name, xpos, ypos-16);
+    text(name, int(xpos), int(ypos-16) );
     textAlign(CENTER, CENTER); fill(col1);
-    text(name1, avg.x,          avg.y+1.5*r);
+    text(name1, int(avg.x),          int(avg.y+1.5*r) );
     textAlign(LEFT,   CENTER); fill(col2);
-    text(name2, xpos,           avg.y+1.5*r);
+    text(name2, int(xpos),           int(avg.y+1.5*r) );
     textAlign(RIGHT,  CENTER); fill(col3);
-    text(name3, xpos+2*(avg.x-xpos), avg.y+1.5*r);
+    text(name3, int(xpos+2*(avg.x-xpos)), int(avg.y+1.5*r) );
     textAlign(CENTER, TOP);
     fill(col1);
-    text(int(100*value1+0.5)+ "%", corner1.x, ypos);
+    text(int(100*value1+0.5)+ "%", int(corner1.x), int(ypos) );
     textAlign(RIGHT, TOP);
     fill(col2);
-    text(int(100*value2+0.5) + "%   ", corner2.x, corner2.y);
+    text(int(100*value2+0.5) + "%   ", int(corner2.x) , int(corner2.y) );
     textAlign(LEFT, TOP);
     fill(col3);
-    text("   " + int(100*value3+0.5) + "%", corner3.x, corner3.y);
+    text("   " + int(100*value3+0.5) + "%", int(corner3.x) , int(corner3.y) );
   }
 }
