@@ -134,7 +134,8 @@ void setup() {
   cam.ZOOM_MAX     = 0.10;
   cam.ZOOM_MIN     = 0.75;
   cam.ROTATION_DEFAULT = PI; // (0 - 2*PI)
-  cam.init(); //Must End with init() if any variables within Camera() are changed from default
+  cam.init(); // Must End with init() if any variables within Camera() are changed from default
+  cam.off();  // Turn cam off while still initializing
   
   // Sample 3D objects to manipulate
   objectLocation = new PVector(B.x/2, B.y/2, 0);
