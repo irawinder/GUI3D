@@ -14,7 +14,7 @@
  *    Chunk()      - A known, fixed volume of space
  *    ChunkGrid()  - A grid of Chunks in 3D space that are accessible via the mouse cursor
  *
- *  MIT LICENSE:  Copyright 2018 Ira Winder
+ *  MIT LICENSE: Copyright 2018 Ira Winder
  *
  *               Permission is hereby granted, free of charge, to any person obtaining a copy of this software 
  *               and associated documentation files (the "Software"), to deal in the Software without restriction, 
