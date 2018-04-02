@@ -368,19 +368,24 @@ class Button {
     int shift = 0;
     if (pressed) shift = 3;
     
-    // Button Holder
+    // Button Shadow
     //
-    noStroke(); fill(50);
+    fill(50); noStroke();
     rect(xpos+3,ypos+3, bW, bH, bevel);
+    
+    // Button
+    //
+    stroke(255, 100); strokeWeight(3);
     if (enabled) {
       int alpha = 200;
       if ( hover() || pressed) alpha = 255;
       fill(col, alpha);
       rect(xpos+shift,ypos+shift, bW, bH, bevel);
     }
+    strokeWeight(1);
     
     // Button Info
-    strokeWeight(1);
+    //
     textAlign(CENTER, CENTER); fill(255);
     String label = "";
     if (keyCommand) label += "[" + keyToggle + "] ";

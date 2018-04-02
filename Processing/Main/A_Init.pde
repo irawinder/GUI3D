@@ -189,8 +189,8 @@ void initToolbars() {
   bar_right.addSlider("Slider 4", "kg", 50, 100, 72, 1, '<', '>', false);
   bar_right.addSlider("Slider 5", "kg", 50, 100, 72, 1, '<', '>', false);
   bar_right.addSlider("Slider 6", "kg", 50, 100, 72, 1, '<', '>', false);
-  bar_right.addButton("Button 1", #009900, 'b', true);
   bar_right.addSlider("Slider 7", "kg", 50, 100, 72, 1, '<', '>', false);
+  bar_right.addButton("Button 1", #009900, 'b', true);
   bar_right.sliders.remove(0);
 }
 
