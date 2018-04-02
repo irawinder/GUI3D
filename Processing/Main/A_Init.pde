@@ -119,7 +119,6 @@ void initCamera() {
   cam.ROTATION_DEFAULT = PI; // (0 - 2*PI)
   cam.init(); // Must End with init() if any BASIC variables within Camera() are changed from default
   
-  
   // Add non-camera UI blockers and edit camera UI characteristics AFTER cam.init()
   //
   cam.vs.xpos = width - 3*MARGIN - BAR_W;
