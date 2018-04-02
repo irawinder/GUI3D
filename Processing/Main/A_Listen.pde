@@ -35,6 +35,7 @@ void listen() {
   s_y = screenY(objectLocation.x, objectLocation.y, objectLocation.z + 30/2.0);
   
   // Click-Object: Draw Selection Cursor
+  //
   cursor_x = 0;
   cursor_y = 0;
   additionLocation = new PVector(0,0);
@@ -46,6 +47,13 @@ void listen() {
       cursor_x = screenX(additionLocation.x, additionLocation.y, additionLocation.z + 30/2.0);
       cursor_y = screenY(additionLocation.x, additionLocation.y, additionLocation.z + 30/2.0);
     }
+  }
+  
+  // Trigger the button
+  //
+  if (bar_right.buttons.get(0).trigger) {
+    println("Button Pressed");
+    bar_right.buttons.get(0).trigger = false;
   }
 }
 

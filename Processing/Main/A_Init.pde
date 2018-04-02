@@ -52,7 +52,7 @@ PFont f12, f18, f24;
 //
 boolean initialized;
 int initPhase = 0;
-int phaseDelay = 1000;
+int phaseDelay = 0;
 String status[] = {
   "Initializing Canvas ...",
   "Loading Data ...",
@@ -152,17 +152,17 @@ void initToolbars() {
   bar_left.addSlider("Slider F", "%", 0, 100, 75, ',', '.', true);
   bar_left.addSlider("SPACER",   "%", 0, 100, 50, 'a', 's', true);
   bar_left.addTriSlider("TriSlider", "value1", #FF00FF, "value2", #FFFF00, "value3", #00FFFF);
-  bar_left.addButton("Item A", 200, true, '1');
-  bar_left.addButton("Item B", 200, true, '2');
-  bar_left.addButton("Item C", 200, true, '3');
-  bar_left.addButton("Item D", 200, true, '4');
-  bar_left.addButton("Item W", 200, true, '5');
-  bar_left.addButton("Item X", 200, true, '6');
-  bar_left.addButton("Item Y", 200, true, '7');
-  bar_left.addButton("Item Z", 200, true, '8');
+  bar_left.addRadio("Item A", 200, true, '1');
+  bar_left.addRadio("Item B", 200, true, '2');
+  bar_left.addRadio("Item C", 200, true, '3');
+  bar_left.addRadio("Item D", 200, true, '4');
+  bar_left.addRadio("Item W", 200, true, '5');
+  bar_left.addRadio("Item X", 200, true, '6');
+  bar_left.addRadio("Item Y", 200, true, '7');
+  bar_left.addRadio("Item Z", 200, true, '8');
   for (int i=0; i<4; i++) {
-    bar_left.buttons.get(i+4).xpos = bar_left.barX + bar_left.barW/2; 
-    bar_left.buttons.get(i+4).ypos = bar_left.buttons.get(i).ypos;
+    bar_left.radios.get(i+4).xpos = bar_left.barX + bar_left.barW/2; 
+    bar_left.radios.get(i+4).ypos = bar_left.radios.get(i).ypos;
   }
   // Delete Spacers
   bar_left.sliders.remove(8);
@@ -172,26 +172,25 @@ void initToolbars() {
   
   // Right Toolbar
   bar_right = new Toolbar(width - (BAR_X + BAR_W), BAR_Y, BAR_W, BAR_H, MARGIN);
-  bar_right.title = "Analysis\n";
+  bar_right.title = "";
   bar_right.credit = "(Right-hand Toolbar)\n\n";
   bar_right.explanation = "Framework for explorable 3D model parameterized with sliders, radio buttons, and 3D Cursor. ";
   bar_right.explanation += "\n\nPress ' r ' to reset all inputs\nPress ' p ' to print camera settings\nPress ' a ' to add add objects\nPress 'h' to hide GUI";
   bar_right.controlY = BAR_Y + bar_left.margin + 6*bar_left.CONTROL_H;
-  bar_right.addButton("Button A", 200, true, '!');
-  bar_right.addButton("Button B", 200, true,'@');
-  bar_right.addButton("Button C", 200, true, '#');
-  bar_right.addButton("Button D", 200, true, '$');
-  bar_right.addButton("Button E", 200, true, '%');
-  bar_right.addSlider("SPACER",   "kg", 50, 100, 72, '<', '>', true);
-  bar_right.addSlider("Slider 1", "kg", 50, 100, 72, '<', '>', true);
-  bar_right.addSlider("Slider 2", "kg", 50, 100, 72, '<', '>', true);
-  bar_right.addSlider("Slider 3", "kg", 50, 100, 72, '<', '>', true);
-  bar_right.addSlider("Slider 4", "kg", 50, 100, 72, '<', '>', true);
-  bar_right.addSlider("Slider 5", "kg", 50, 100, 72, '<', '>', true);
-  bar_right.addSlider("Slider 6", "kg", 50, 100, 72, '<', '>', true);
-  bar_right.addSlider("Slider 7", "kg", 50, 100, 72, '<', '>', true);
-  bar_right.addSlider("Slider 8", "kg", 50, 100, 72, '<', '>', true);
-  bar_right.addSlider("Slider 9", "kg", 50, 100, 72, '<', '>', true);
+  bar_right.addRadio("Button A", 200, true, '!');
+  bar_right.addRadio("Button B", 200, true, '@');
+  bar_right.addRadio("Button C", 200, true, '#');
+  bar_right.addRadio("Button D", 200, true, '$');
+  bar_right.addRadio("Button E", 200, true, '%');
+  bar_right.addSlider("SPACER",   "kg", 50, 100, 72, '<', '>', false);
+  bar_right.addSlider("Slider 1", "kg", 50, 100, 72, '<', '>', false);
+  bar_right.addSlider("Slider 2", "kg", 50, 100, 72, '<', '>', false);
+  bar_right.addSlider("Slider 3", "kg", 50, 100, 72, '<', '>', false);
+  bar_right.addSlider("Slider 4", "kg", 50, 100, 72, '<', '>', false);
+  bar_right.addSlider("Slider 5", "kg", 50, 100, 72, '<', '>', false);
+  bar_right.addSlider("Slider 6", "kg", 50, 100, 72, '<', '>', false);
+  bar_right.addButton("Button 1", #009900, 'b');
+  bar_right.addSlider("Slider 7", "kg", 50, 100, 72, '<', '>', false);
   bar_right.sliders.remove(0);
 }
 

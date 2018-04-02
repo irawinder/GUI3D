@@ -38,7 +38,8 @@ class Toolbar {
   
   String title, credit, explanation;
   ArrayList<ControlSlider> sliders;
-  ArrayList<RadioButton> buttons;
+  ArrayList<RadioButton> radios;
+  ArrayList<Button> buttons;
   ArrayList<TriSlider> tSliders;
   
   Toolbar(int barX, int barY, int barW, int barH, int margin) {
@@ -50,13 +51,14 @@ class Toolbar {
     contentW = barW - 2*margin;
     contentH = barH - 2*margin;
     sliders  = new ArrayList<ControlSlider>();
-    buttons  = new ArrayList<RadioButton>();
+    buttons  = new ArrayList<Button>();
+    radios  = new ArrayList<RadioButton>();
     tSliders = new ArrayList<TriSlider>();
     controlY = 8*CONTROL_H;
   }
   
   void addSlider(String name, String unit, int valMin, int valMax, float DEFAULT_VALUE, char keyMinus, char keyPlus, boolean keyCommand) {
-    float num = sliders.size() + buttons.size() + 6*tSliders.size();
+    float num = sliders.size() + radios.size() + 2*buttons.size() + 6*tSliders.size();
     ControlSlider s;
     s = new ControlSlider();
     s.name = name;
@@ -74,8 +76,8 @@ class Toolbar {
     sliders.add(s);
   }
   
-  void addButton(String name, int col, boolean DEFAULT_VALUE, char keyToggle) {
-    float num = sliders.size() + buttons.size() + 6*tSliders.size();
+  void addRadio(String name, int col, boolean DEFAULT_VALUE, char keyToggle) {
+    float num = sliders.size() + radios.size() + 2*buttons.size() + 6*tSliders.size();
     RadioButton b;
     b = new RadioButton();
     b.name = name;
@@ -85,11 +87,24 @@ class Toolbar {
     b.DEFAULT_VALUE = DEFAULT_VALUE;
     b.value = b.DEFAULT_VALUE;
     b.col = col;
+    radios.add(b);
+  }
+  
+  void addButton(String name, int col, char keyToggle) {
+    float num = sliders.size() + radios.size() + 2*buttons.size() + 6*tSliders.size() - 0.25;
+    Button b = new Button();
+    b.name = name;
+    b.col = col;
+    b.keyToggle = keyToggle;
+    b.xpos = barX + margin;
+    b.ypos = controlY + int(num*CONTROL_H);
+    b.bW = barW - 2*margin;
+    b.bH = CONTROL_H;
     buttons.add(b);
   }
   
   void addTriSlider(String name, String name1, int col1, String name2, int col2, String name3, int col3) {
-    float num = sliders.size() + buttons.size() + 6*tSliders.size();
+    float num = sliders.size() + radios.size() + 2*buttons.size() + 6*tSliders.size();
     TriSlider t;
     t = new TriSlider();
     t.name = name;
@@ -118,18 +133,20 @@ class Toolbar {
   
   void pressed() {
     if (sliders.size()  > 0) for (ControlSlider s: sliders ) s.listen();
-    if (buttons.size()  > 0) for (RadioButton   b: buttons ) b.listen();
+    if (radios.size()   > 0) for (RadioButton   b: radios  ) b.listen();
+    if (buttons.size()  > 0) for (Button        b: buttons ) b.listen();
     if (tSliders.size() > 0) for (TriSlider     t: tSliders) t.listen();
   }
   
   void released() {
     if (sliders.size()  > 0) for (ControlSlider s: sliders ) s.isDragged = false;
     if (tSliders.size() > 0) for (TriSlider     t: tSliders) t.isDragged = false;
+    if (buttons.size()  > 0) for (Button        b: buttons ) b.released();
   }
   
   void restoreDefault() {
     if (sliders.size()  > 0) for (ControlSlider s: sliders ) s.value = s.DEFAULT_VALUE;
-    if (buttons.size()  > 0) for (RadioButton   b: buttons ) b.value = b.DEFAULT_VALUE;
+    if (radios.size()   > 0) for (RadioButton   b: radios  ) b.value = b.DEFAULT_VALUE;
     if (tSliders.size() > 0) for (TriSlider     t: tSliders) t.useDefault();
   }
   
@@ -165,9 +182,8 @@ class Toolbar {
     }
     
     // Buttons
-    for (RadioButton b: buttons) {
-      b.drawMe();
-    }
+    for (RadioButton b: radios) b.drawMe();
+    for (Button b: buttons)     b.drawMe();
     
     // TriSliders
     for (TriSlider t: tSliders) {
@@ -482,5 +498,81 @@ class TriSlider {
     textAlign(LEFT, TOP);
     fill(col3);
     text("   " + int(100*value3+0.5) + "%", int(corner3.x) , int(corner3.y) );
+  }
+}
+
+class Button {
+  String name;
+  int col;
+  int xpos;
+  int ypos;
+  int bW, bH, bevel;
+  char keyToggle;
+  int valMin;
+  int valMax;
+  boolean trigger;
+  boolean pressed;
+  boolean enabled;
+  
+  Button() {
+    xpos = 0;
+    ypos = 0;
+    bW = 100;
+    bH = 25;
+    keyToggle = ' ';
+    trigger = false;
+    pressed = false;
+    enabled = true;
+    col = 200;
+    bevel = 25;
+  }
+  
+  void listen() {
+    
+    // Mouse Controls
+    if( mousePressed && hover() && enabled) {
+      pressed = true;
+    }
+    
+    // Keyboard Controls
+    //if ((keyPressed == true) && (key == keyToggle)) {value = !value;}
+  }
+  
+  void released() {
+    if (pressed && enabled) {
+      trigger = true;
+      pressed = false;
+    }
+  }
+  
+  boolean hover() {
+    if( mouseY > ypos && mouseY < ypos + bH && 
+        mouseX > xpos && mouseX < xpos + bW ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  void drawMe() {
+    
+    int shift = 0;
+    if (pressed) shift = 3;
+    
+    // Button Holder
+    //
+    noStroke(); fill(50);
+    rect(xpos+3,ypos+3, bW, bH, bevel);
+    if (enabled) {
+      int alpha = 200;
+      if ( hover() || pressed) alpha = 255;
+      fill(col, alpha);
+      rect(xpos+shift,ypos+shift, bW, bH, bevel);
+    }
+    
+    // Button Info
+    strokeWeight(1);
+    textAlign(CENTER, CENTER); fill(255);
+    text(name,int(xpos + 0.5*bW)+shift,int(ypos + 0.5*bH)+shift );
   }
 }
