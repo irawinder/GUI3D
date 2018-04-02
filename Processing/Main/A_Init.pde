@@ -85,8 +85,11 @@ void init() {
     
   } else if (initPhase == 1) {
     
-    // Init Data
-    // 
+    // Init Data / Sample 3D objects to manipulate
+    //
+    objectLocation = new PVector(B.x/2, B.y/2, 0);
+    additions = new ArrayList<PVector>();
+    placeAdditions = true;
     
   } else if (initPhase == 2) {
     
@@ -129,11 +132,6 @@ void initCamera() {
   // Turn cam off while still initializing
   //
   cam.off();  
-  
-  // Sample 3D objects to manipulate
-  objectLocation = new PVector(B.x/2, B.y/2, 0);
-  additions = new ArrayList<PVector>();
-  placeAdditions = true;
 }
 
 void initToolbars() {
