@@ -39,7 +39,7 @@ void listen() {
   cursor_x = -1000;
   cursor_y = -1000;
   additionLocation = new PVector(0,0);
-  if (cam.enableChunks && cam.chunkField.closestFound && placeAdditions && cam.drag.inExtents() && !cam.drag.inBlocker()) {
+  if (cam.enableChunks && cam.chunkField.closestFound && placeAdditions && !cam.hoverGUI()) {
     Chunk c = cam.chunkField.closest;
     additionLocation = c.location;
     // Calculate Curson Screen Location
@@ -65,7 +65,7 @@ void mousePressed() { if (initialized) {
 
 void mouseClicked() { if (initialized) {
   
-  if (cam.chunkField.closestFound && cam.enableChunks && cam.drag.inExtents() && !cam.drag.inBlocker()) {
+  if (cam.chunkField.closestFound && cam.enableChunks && !cam.hoverGUI()) {
     additions.add(cam.chunkField.closest.location);
   }
   

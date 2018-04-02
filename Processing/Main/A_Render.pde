@@ -106,7 +106,7 @@ void render2D() {
 
   // Click-Object: Draw Cursor Text
   //
-  if (cam.enableChunks && cam.chunkField.closestFound && placeAdditions && cam.drag.inExtents() && !cam.drag.inBlocker()) {
+  if (cam.enableChunks && cam.chunkField.closestFound && placeAdditions && !cam.hoverGUI()) {
     fill(#00FF00, 200); textAlign(LEFT, CENTER);
     text("Click to Place", cursor_x + 0.3*diam, cursor_y);
   }

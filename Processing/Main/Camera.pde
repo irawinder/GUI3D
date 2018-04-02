@@ -302,6 +302,16 @@ class Camera {
       popMatrix();
     }
   }
+  
+  // Check if mouse is hovering over any of the camera GUI components
+  //
+  boolean hoverGUI() {
+    if (cam.drag.inExtents() && !cam.drag.inBlocker() && !(cam.hs.overEvent() && cam.hs.enable) && !(cam.vs.overEvent() && cam.vs.enable) ) {
+      return false;
+    } else {
+      return true;
+    }
+  }
 }
 
 // Horizontal Slider
@@ -536,7 +546,7 @@ class XYDrag {
   }
   
   boolean inExtents() {
-    if (mouseX > extentX && mouseX < extentX+extentW && mouseY > extentY && mouseY < extentY+extentH && enable) {
+    if (mouseX >= extentX && mouseX < extentX+extentW && mouseY > extentY && mouseY < extentY+extentH && enable) {
       return true; 
     } else {
       return false;
@@ -546,7 +556,7 @@ class XYDrag {
   boolean inBlocker() {
     boolean inside = false;
     for (Integer[] b: blocker) 
-      if (mouseX > b[0] && mouseX < b[0]+b[2] && mouseY > b[1] && mouseY < b[1]+b[3]) 
+      if (mouseX >= b[0] && mouseX < b[0]+b[2] && mouseY > b[1] && mouseY < b[1]+b[3]) 
         inside = true;
     return inside;
   }
