@@ -103,14 +103,12 @@ void render2D() {
   fill(#FFFF00, 200); textAlign(LEFT, CENTER);
   text("OBJECT: Move with Arrow Keys", s_x + 0.6*diam, s_y);
   
-  if (cam.enableChunks && placeAdditions) {
-    
-    // Click-Object: Draw Cursor Text
-    //
-    if (cam.chunkField.closestFound) {
-      fill(#00FF00, 200); textAlign(LEFT, CENTER);
-      text("Click to Place", cursor_x + 0.3*diam, cursor_y);
-    }
+
+  // Click-Object: Draw Cursor Text
+  //
+  if (cam.enableChunks && cam.chunkField.closestFound && placeAdditions && cam.drag.inExtents() && !cam.drag.inBlocker()) {
+    fill(#00FF00, 200); textAlign(LEFT, CENTER);
+    text("Click to Place", cursor_x + 0.3*diam, cursor_y);
   }
     
   // Draw Slider Bars for Controlling Zoom and Rotation (2D canvas begins)

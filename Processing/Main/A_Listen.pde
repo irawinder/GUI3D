@@ -36,17 +36,15 @@ void listen() {
   
   // Click-Object: Draw Selection Cursor
   //
-  cursor_x = 0;
-  cursor_y = 0;
+  cursor_x = -1000;
+  cursor_y = -1000;
   additionLocation = new PVector(0,0);
-  if (cam.enableChunks && placeAdditions) {
-    if (cam.chunkField.closestFound) {
-      Chunk c = cam.chunkField.closest;
-      additionLocation = c.location;
-      // Calculate Curson Screen Location
-      cursor_x = screenX(additionLocation.x, additionLocation.y, additionLocation.z + 30/2.0);
-      cursor_y = screenY(additionLocation.x, additionLocation.y, additionLocation.z + 30/2.0);
-    }
+  if (cam.enableChunks && cam.chunkField.closestFound && placeAdditions && cam.drag.inExtents() && !cam.drag.inBlocker()) {
+    Chunk c = cam.chunkField.closest;
+    additionLocation = c.location;
+    // Calculate Curson Screen Location
+    cursor_x = screenX(additionLocation.x, additionLocation.y, additionLocation.z + 30/2.0);
+    cursor_y = screenY(additionLocation.x, additionLocation.y, additionLocation.z + 30/2.0);
   }
   
   // Trigger the button
@@ -67,7 +65,7 @@ void mousePressed() { if (initialized) {
 
 void mouseClicked() { if (initialized) {
   
-  if (cam.chunkField.closestFound && cam.enableChunks) {
+  if (cam.chunkField.closestFound && cam.enableChunks && cam.drag.inExtents() && !cam.drag.inBlocker()) {
     additions.add(cam.chunkField.closest.location);
   }
   

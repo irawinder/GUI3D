@@ -110,17 +110,30 @@ void init() {
 void initCamera() {
   
   // Initialize 3D World Camera Defaults
+  //
   cam = new Camera (B, MARGIN);
-  // eX, eW (extentsX ...) prevents accidental dragging when interactiong with toolbar
-  cam.eX = MARGIN + BAR_W;
-  cam.eW = width - 2*(BAR_W + MARGIN);
   cam.ZOOM_DEFAULT = 0.25;
   cam.ZOOM_POW     = 1.75;
   cam.ZOOM_MAX     = 0.10;
   cam.ZOOM_MIN     = 0.75;
   cam.ROTATION_DEFAULT = PI; // (0 - 2*PI)
-  cam.init(); // Must End with init() if any variables within Camera() are changed from default
-  cam.off();  // Turn cam off while still initializing
+  
+  // Must End with init() if any BASIC variables within Camera() are changed from default
+  //
+  cam.init(); 
+  
+  // Edit blockers and UI characteristics AFTER cam.init()
+  //
+  cam.vs.xpos = width - 3*MARGIN - BAR_W;
+  //cam.hs.enable = false; //disable rotation
+  cam.drag.addBlocker(MARGIN, MARGIN, BAR_W, BAR_H);
+  cam.drag.addBlocker(width - MARGIN - BAR_W, MARGIN, BAR_W, BAR_H);
+  cam.drag.addBlocker(int(cam.hs.xpos), int(cam.hs.ypos), int(cam.hs.swidth), int(cam.hs.sheight));
+  cam.drag.addBlocker(int(cam.vs.xpos), int(cam.vs.ypos), int(cam.vs.swidth), int(cam.vs.sheight));
+  
+  // Turn cam off while still initializing
+  //
+  cam.off();  
   
   // Sample 3D objects to manipulate
   objectLocation = new PVector(B.x/2, B.y/2, 0);
