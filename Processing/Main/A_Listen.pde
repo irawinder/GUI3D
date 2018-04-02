@@ -138,3 +138,10 @@ void keyPressed() { if (initialized) {
   }
   
 } }
+
+void keyReleased() { if (initialized) {
+    
+    bar_left.released();
+    bar_right.released();
+  
+} }

@@ -58,7 +58,7 @@ class Toolbar {
     controlY = 8*CONTROL_H;
   }
   
-  void addSlider(String name, String unit, int valMin, int valMax, float DEFAULT_VALUE, char keyMinus, char keyPlus, boolean keyCommand) {
+  void addSlider(String name, String unit, int valMin, int valMax, float DEFAULT_VALUE, float inc, char keyMinus, char keyPlus, boolean keyCommand) {
     float num = sliders.size() + radios.size() + 2*buttons.size() + 6*tSliders.size();
     ControlSlider s;
     s = new ControlSlider();
@@ -74,15 +74,17 @@ class Toolbar {
     s.valMax = valMax;
     s.DEFAULT_VALUE = DEFAULT_VALUE;
     s.value = s.DEFAULT_VALUE;
+    s.s_increment = inc;
     sliders.add(s);
   }
   
-  void addRadio(String name, int col, boolean DEFAULT_VALUE, char keyToggle) {
+  void addRadio(String name, int col, boolean DEFAULT_VALUE, char keyToggle, boolean keyCommand) {
     float num = sliders.size() + radios.size() + 2*buttons.size() + 6*tSliders.size();
     RadioButton b;
     b = new RadioButton();
     b.name = name;
     b.keyToggle = keyToggle;
+    b.keyCommand = keyCommand;
     b.xpos = barX + margin;
     b.ypos = controlY + int(num*CONTROL_H);
     b.DEFAULT_VALUE = DEFAULT_VALUE;
@@ -91,12 +93,13 @@ class Toolbar {
     radios.add(b);
   }
   
-  void addButton(String name, int col, char keyToggle) {
+  void addButton(String name, int col, char keyToggle, boolean keyCommand) {
     float num = sliders.size() + radios.size() + 2*buttons.size() + 6*tSliders.size() - 0.25;
     Button b = new Button();
     b.name = name;
     b.col = col;
     b.keyToggle = keyToggle;
+    b.keyCommand = keyCommand;
     b.xpos = barX + margin;
     b.ypos = controlY + int(num*CONTROL_H);
     b.bW = barW - 2*margin;
@@ -118,11 +121,11 @@ class Toolbar {
     t.xpos = barX + margin;
     t.ypos = controlY + int(num*CONTROL_H);
     t.corner1.x = barX + 0.50*barW;
-    t.corner1.y = controlY + (num+0.70)*CONTROL_H;
+    t.corner1.y = controlY + (num+0.70)*CONTROL_H + 16;
     t.corner2.x = barX + 0.33*barW;
-    t.corner2.y = controlY + (num+2.90)*CONTROL_H;
+    t.corner2.y = controlY + (num+2.90)*CONTROL_H + 16;
     t.corner3.x = barX + 0.67*barW;
-    t.corner3.y = controlY + (num+2.90)*CONTROL_H;
+    t.corner3.y = controlY + (num+2.90)*CONTROL_H + 16;
     t.avgX = (t.corner1.x+t.corner2.x+t.corner3.x)/3.0;
     t.avgY = (t.corner1.y+t.corner2.y+t.corner3.y)/3.0;
     t.avg = new PVector(t.avgX, t.avgY);
@@ -218,6 +221,8 @@ class ControlSlider {
   int valMax;
   float value;
   float DEFAULT_VALUE = 0;
+  float s_increment;
+  int col;
   
   ControlSlider() {
     xpos = 0;
@@ -231,11 +236,18 @@ class ControlSlider {
     valMin = 0;
     valMax = 0;
     value = 0;
+    s_increment = 1;
+    col = 255;
   }
   
   void update() {
     if (isDragged) value = (mouseX-xpos)*(valMax-valMin)/len+valMin;
     checkLimit();
+    if (value % s_increment < s_increment/2) {
+      value = s_increment*int(value/s_increment);
+    } else {
+      value = s_increment*(1+int(value/s_increment));
+    }
   }
   
   void listen() {
@@ -290,9 +302,90 @@ class ControlSlider {
     
     // Slider Circle
     noStroke();
-    fill(200);
-    if ( hover() ) fill(255);
+    fill(col, 225);
+    if ( hover() ) fill(col, 255);
     ellipse(xpos+0.5*diameter+(len-1.0*diameter)*(value-valMin)/(valMax-valMin),ypos,diameter,diameter);
+  }
+}
+
+class Button {
+  String name;
+  int col;
+  int xpos;
+  int ypos;
+  int bW, bH, bevel;
+  char keyToggle;
+  boolean keyCommand;
+  int valMin;
+  int valMax;
+  boolean trigger;
+  boolean pressed;
+  boolean enabled;
+  
+  Button() {
+    xpos = 0;
+    ypos = 0;
+    bW = 100;
+    bH = 25;
+    keyToggle = ' ';
+    keyCommand = true;
+    trigger = false;
+    pressed = false;
+    enabled = true;
+    col = 200;
+    bevel = 25;
+  }
+  
+  void listen() {
+    
+    // Mouse Controls
+    if( mousePressed && hover() && enabled) {
+      pressed = true;
+    }
+    
+    // Keyboard Controls
+    if(keyCommand) if ((keyPressed == true) && (key == keyToggle)) {pressed = true;}
+  }
+  
+  void released() {
+    if (pressed && enabled) {
+      trigger = true;
+      pressed = false;
+    }
+  }
+  
+  boolean hover() {
+    if( mouseY > ypos && mouseY < ypos + bH && 
+        mouseX > xpos && mouseX < xpos + bW ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+  
+  void drawMe() {
+    
+    int shift = 0;
+    if (pressed) shift = 3;
+    
+    // Button Holder
+    //
+    noStroke(); fill(50);
+    rect(xpos+3,ypos+3, bW, bH, bevel);
+    if (enabled) {
+      int alpha = 200;
+      if ( hover() || pressed) alpha = 255;
+      fill(col, alpha);
+      rect(xpos+shift,ypos+shift, bW, bH, bevel);
+    }
+    
+    // Button Info
+    strokeWeight(1);
+    textAlign(CENTER, CENTER); fill(255);
+    String label = "";
+    if (keyCommand) label += "[" + keyToggle + "] ";
+    label += name;
+    text(label,int(xpos + 0.5*bW)+shift,int(ypos + 0.5*bH)+shift );
   }
 }
 
@@ -303,6 +396,7 @@ class RadioButton {
   int ypos;
   int diameter;
   char keyToggle;
+  boolean keyCommand;
   int valMin;
   int valMax;
   boolean value;
@@ -313,6 +407,7 @@ class RadioButton {
     ypos = 0;
     diameter = 20;
     keyToggle = ' ';
+    keyCommand = true;
     value = false;
     col = 200;
   }
@@ -325,7 +420,7 @@ class RadioButton {
     }
     
     // Keyboard Controls
-    if ((keyPressed == true) && (key == keyToggle)) {value = !value;}
+    if (keyCommand) if ((keyPressed == true) && (key == keyToggle)) {value = !value;}
   }
   
   boolean hover() {
@@ -346,7 +441,10 @@ class RadioButton {
     if (value) { fill(255); }
     else       { fill(150); } 
     textAlign(LEFT, CENTER);
-    text("[" + keyToggle + "] " + name,int(xpos + 1.5*diameter),int(ypos) );
+    String label = "";
+    if (keyCommand) label += "[" + keyToggle + "] ";
+    label += name;
+    text(label,int(xpos + 1.5*diameter),int(ypos) );
     
     // Button Holder
     noStroke(); fill(50);
@@ -484,96 +582,20 @@ class TriSlider {
     fill(255);
     textAlign(LEFT, TOP);
     text(name, int(xpos), int(ypos-16) );
-    textAlign(CENTER, CENTER); fill(col1);
-    text(name1, int(avg.x),          int(avg.y+1.5*r) );
-    textAlign(LEFT,   CENTER); fill(col2);
-    text(name2, int(xpos),           int(avg.y+1.5*r) );
-    textAlign(RIGHT,  CENTER); fill(col3);
-    text(name3, int(xpos+2*(avg.x-xpos)), int(avg.y+1.5*r) );
-    textAlign(CENTER, TOP);
+    textAlign(CENTER, BOTTOM); fill(col1);
+    text(name1, int(avg.x), int(corner1.y) - 24 );
+    textAlign(RIGHT,   TOP); fill(col2);
+    text(name2, int(corner2.x) - 8, int(corner2.y) + 16 );
+    textAlign(LEFT,  TOP); fill(col3);
+    text(name3, int(corner3.x) + 8, int(corner3.y) + 16 );
+    textAlign(CENTER, BOTTOM);
     fill(col1);
-    text(int(100*value1+0.5)+ "%", int(corner1.x), int(ypos) );
+    text(int(100*value1+0.5) + "%", int(corner1.x), int(corner1.y) - 8 );
     textAlign(RIGHT, TOP);
     fill(col2);
-    text(int(100*value2+0.5) + "%   ", int(corner2.x) , int(corner2.y) );
+    text(int(100*value2+0.5) + "%", int(corner2.x) - 8, int(corner2.y) );
     textAlign(LEFT, TOP);
     fill(col3);
-    text("   " + int(100*value3+0.5) + "%", int(corner3.x) , int(corner3.y) );
-  }
-}
-
-class Button {
-  String name;
-  int col;
-  int xpos;
-  int ypos;
-  int bW, bH, bevel;
-  char keyToggle;
-  int valMin;
-  int valMax;
-  boolean trigger;
-  boolean pressed;
-  boolean enabled;
-  
-  Button() {
-    xpos = 0;
-    ypos = 0;
-    bW = 100;
-    bH = 25;
-    keyToggle = ' ';
-    trigger = false;
-    pressed = false;
-    enabled = true;
-    col = 200;
-    bevel = 25;
-  }
-  
-  void listen() {
-    
-    // Mouse Controls
-    if( mousePressed && hover() && enabled) {
-      pressed = true;
-    }
-    
-    // Keyboard Controls
-    //if ((keyPressed == true) && (key == keyToggle)) {value = !value;}
-  }
-  
-  void released() {
-    if (pressed && enabled) {
-      trigger = true;
-      pressed = false;
-    }
-  }
-  
-  boolean hover() {
-    if( mouseY > ypos && mouseY < ypos + bH && 
-        mouseX > xpos && mouseX < xpos + bW ) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-  
-  void drawMe() {
-    
-    int shift = 0;
-    if (pressed) shift = 3;
-    
-    // Button Holder
-    //
-    noStroke(); fill(50);
-    rect(xpos+3,ypos+3, bW, bH, bevel);
-    if (enabled) {
-      int alpha = 200;
-      if ( hover() || pressed) alpha = 255;
-      fill(col, alpha);
-      rect(xpos+shift,ypos+shift, bW, bH, bevel);
-    }
-    
-    // Button Info
-    strokeWeight(1);
-    textAlign(CENTER, CENTER); fill(255);
-    text(name,int(xpos + 0.5*bW)+shift,int(ypos + 0.5*bH)+shift );
+    text(int(100*value3+0.5) + "%", int(corner3.x) + 8, int(corner3.y) );
   }
 }

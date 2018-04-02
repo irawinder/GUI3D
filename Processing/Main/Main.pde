@@ -64,7 +64,7 @@ void draw() {
     
     // A_Listen.pde - Updates settings and values for this frame
     //
-    listen();
+    if (showGUI) listen();
     
     // A_Render.pde - Renders current frame of visualization
     //
