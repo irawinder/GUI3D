@@ -17,9 +17,9 @@
  *
  *    Toolbar()       - Toolbar that may implement ControlSlider(), Radio Button(), and TriSlider()
  *    ControlSlider() - A customizable horizontal slider ideal for generic parameritization of integers
+ *    Button()        - A customizable button that triggers a one-time action
  *    RadioButton()   - A customizable radio button ideal for generic parameritization of boolean
  *    TriSlider()     - A customizable triangle slider that outputs three positive floats that add up to 1.0
- *    Button()        - A customizable button that triggers a one-time action
  *
  *  MIT LICENSE: Copyright 2018 Ira Winder
  *
