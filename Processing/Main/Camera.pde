@@ -3,7 +3,7 @@
  *
  *  This script demonstrates the implementation of a "Camera" class that has ready-made
  *  UI, Sliders, Radio Buttons, I/O, and smooth camera transitions. For a generic 
- *  implementation check out the repo at: http://github.com/irawinder/UI3D
+ *  implementation check out the repo at: http://github.com/irawinder/GUI3D
  *
  *  CLASSES CONTAINED:
  *
