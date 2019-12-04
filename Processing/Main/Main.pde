@@ -1,8 +1,8 @@
 /*  GUI3D ALGORITHMS
  *  Ira Winder, ira@mit.edu, 2018
  *
- *  These script demonstrates the implementation of a Camera() and Toolbar() 
- *  classes that has ready-made UI, Sliders, Radio Buttons, I/O, and smooth camera 
+ *  This script demonstrates the implementation of a Camera() and Toolbar() 
+ *  classes that have ready-made UI, Sliders, Radio Buttons, I/O, and smooth camera 
  *  transitions. For a generic implementation check out the repo at: 
  *  http://github.com/irawinder/GUI3D
  *
@@ -50,7 +50,7 @@ void setup() {
   
 }
 
-// Runs on a infinite loop after setup
+// Runs on an infinite loop after setup
 //
 void draw() {
   if (!initialized) {
